@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "@xterm/xterm": "^5.5.0"
+    "terminal-kit": "^3.1.2"
+  },
+  "scripts": {
+    "b": "node bahadur.js"
   }
 }
