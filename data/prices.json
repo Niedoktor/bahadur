@@ -1,0 +1,13 @@
+{
+    "spaceyard": 2,
+    "factory": 5,
+    "luxury": 4,
+    "officer": 0,
+    "manager": 0,
+    "share": [
+        2,
+        3,
+        4,
+        5
+    ]
+}

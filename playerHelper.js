@@ -2,12 +2,7 @@ let messageLog;
 let db;
 
 let playerHelper = {
-  init: async (_db, log) => {
-    if(log){
-      messageLog = log; 
-      messageLog("playerHelper.init");
-    }
-
+  init: async (_db) => {
     db = _db;
   },
 
@@ -15,9 +10,9 @@ let playerHelper = {
     return db.players.find((p) => p.id == playerId);
   },
 
-  yardsCount: (playerId) => {
-    if(!db.yards) return 0;
-    return db.yards.filter((y) => y.ownerId == playerId).length;
+  spaceyardsCount: (playerId) => {
+    if(!db.spaceyards) return 0;
+    return db.spaceyards.filter((y) => y.ownerId == playerId).length;
   }
 }
 

@@ -1,5 +1,6 @@
 {
     "id": 1,
     "ownerId": 1,
-    "occupied": true
+    "spaceshipName": "Joyously Unaccountably",
+    "spaceshipLocation": "docking"
 }

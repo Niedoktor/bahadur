@@ -1,7 +1,8 @@
 {
   "dependencies": {
+    "@faker-js/faker": "^9.9.0",
     "chokidar": "^4.0.3",
-    "terminal-kit": "^3.1.2"
+    "terminal-kit": "github:Niedoktor/terminal-kit"
   },
   "scripts": {
     "b": "node bahadur.js"
