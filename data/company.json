@@ -1,0 +1,25 @@
+{
+    "money": 5,
+    "shares": [
+        {
+            "price": 2,
+            "playerId": 0
+        },
+        {
+            "price": 3,
+            "playerId": 0
+        },
+        {
+            "price": 3,
+            "playerId": 0
+        },
+        {
+            "price": 4,
+            "playerId": 0
+        },
+        {
+            "price": 5,
+            "playerId": 0
+        }
+    ]
+}

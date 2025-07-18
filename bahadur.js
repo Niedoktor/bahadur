@@ -1,6 +1,5 @@
 const db = require('./db');
 const log = require('./log');
-const playerHelper = require('./playerHelper');
 const termkit = require('terminal-kit');
 const { faker } = require('@faker-js/faker');
 const helpers = require('./helpers');
@@ -92,8 +91,6 @@ async function init(){
 	await db.init('./data', (msg) => {
 		log.print(msg);
 	});
-
-	await playerHelper.init(db);
 
 	let topBar = new termkit.RowMenu({
 		parent: document.elements.game,
@@ -188,6 +185,11 @@ async function init(){
 						content: '',
 						value: 'share3',
 						markup: true
+					},
+					{
+						content: '',
+						value: 'share4',
+						markup: true
 					}
 				]
 			},
@@ -224,10 +226,12 @@ async function init(){
 
 	gameMenu.on('submit', gameMenuSubmit);
 
+	//await resetGame();
+
 	refreshUI();
 }
 
-async function Confirm(prompt, x, y){
+async function Confirm(prompt, x, y, callback){
 	let confirm = new termkit.InlineMenu({
 		parent: document.elements.game,
 		id: "confirm",
@@ -235,50 +239,79 @@ async function Confirm(prompt, x, y){
 		y: y,
 		prompt: {
 			textAttr: { bgColor: 'blue', color: 'white' },
-			content: prompt,
+			content: " " + prompt + " ",
 			contentHasMarkup: true
 		},
-		width: 30,
+		width: prompt.length + 12,
 		items: [
 			{
-				content: 'Yes',
+				content: ' Yes ',
 				value: 'yes'
 			},
 			{
-				content: 'No',
+				content: ' No ',
 				value: 'no'
 			},
-			{
-				content: 'Abort',
-				value: 'abort'
-			}
+			// {
+			// 	content: 'Abort',
+			// 	value: 'abort'
+			// }
 		]
 	});
 
-	confirm.on('submit', confirmSubmit);
+	confirm.on('submit', callback);
 }
 
-async function confirmSubmit(value) {
-	switch(value){
+async function confirmSecondInvestSubmit(value) {
+	let player = db.players.get(1);
+
+	delete player.confirm;
+
+	if(value == "yes"){
+		if(player.lastAction.startsWith("share")){
+			player.buyingShare = true;
+			player.update();
+		}else{
+			await investAction(player.lastAction);
+		}
+	}else{
+		player.update();
 	}
+
 	document.elements.confirm.destroy();
+
+	refreshUI();
 }
 
 async function investMenuSubmit(value) {
-	let player = playerHelper.getPlayer(1);
+	let player = db.players.get(1);
 
-	if(player.lastAction == value && player.money >= db.prices[value] * 2){
-		let pos = await term.getCursorLocation();
-		document.elements.investMenu.disabled = true;
-		document.elements.investMenu.redraw();
-		await Confirm("Perform an action twice?", 2, pos.y);
-		return;
-	}
+	await investAction(value);
+
+	let cheapestShare = db.company.shares.find(o => o.playerId == 0);
 	
-	switch(value){
-		case "spaceyard": await buySpaceyard(1); break;
+	if((player.lastAction == value && player.money >= db.prices[value]) ||
+		(player.lastAction == "share" && value.startsWith("share") && cheapestShare !== undefined && player.money >= cheapestShare.price)){
+		player.confirm = true;
 	}
+
+	player.update();
+	
 	refreshUI();
+}
+
+async function investAction(value){
+	let player = db.players.get(1);
+
+	if(value.startsWith("share")){
+		await buyShare(1, value);
+		document.elements.investMenu.closeSubmenu();
+	}else{
+		switch(value){
+			case "spaceyard": await buySpaceyard(1); break;
+		}
+		player.lastAction = value;
+	}
 }
 
 async function gameMenuSubmit(value) {
@@ -308,13 +341,13 @@ function menuButtonDisabled(menu, idx, disabled){
 	document.elements[menu].itemsDef[idx].disabled = disabled;
 }
 
-function refreshUI(){
-	let player = playerHelper.getPlayer(1);
+async function refreshUI(){
+	let player = db.players.get(1);
 
 	menuButtonContent("topBar", 0, ` ^[black]${db.main.turn} `);
 	menuButtonContent("topBar", 1, ` ^[black]${db.main.phase} `);
 	menuButtonContent("topBar", 2, ` Money: ^[black]${player.money} `);
-	menuButtonContent("topBar", 3, ` Yards: ^[black]${playerHelper.spaceyardsCount(1)} `);
+	menuButtonContent("topBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
 
 	menuRedraw("topBar");
 
@@ -328,21 +361,24 @@ function refreshUI(){
 		menuButtonContent("investMenu", 5, `  ${player.lastAction == "officer" ? "^+" : ""}Hire Officer ${player.lastAction == "officer" ? "x2" : "  "}  ${db.prices.officer}C  `);
 		menuButtonContent("investMenu", 6, `  ${player.lastAction == "manager" ? "^+" : ""}Hire Manager ${player.lastAction == "manager" ? "x2" : "  "}  ${db.prices.manager}C ►`);
 
-		menuButtonDisabled("investMenu", 1, player.money < db.prices.spaceyard);
-		menuButtonDisabled("investMenu", 2, player.money < db.prices.factory);
-		menuButtonDisabled("investMenu", 3, player.money < db.prices.luxury);
-		menuButtonDisabled("investMenu", 5, player.money < db.prices.officer);
-		menuButtonDisabled("investMenu", 6, player.money < db.prices.manager);
+		let cheapestShare = db.company.shares.find(o => o.playerId == 0);
 
-		document.elements.investMenu.itemsDef[4].items[0].content = `  ${db.prices.share[0]}C  `;
-		document.elements.investMenu.itemsDef[4].items[1].content = `  ${db.prices.share[1]}C  `;
-		document.elements.investMenu.itemsDef[4].items[2].content = `  ${db.prices.share[2]}C  `;
-		document.elements.investMenu.itemsDef[4].items[3].content = `  ${db.prices.share[3]}C  `;
+		menuButtonDisabled("investMenu", 1, player.money < db.prices.spaceyard || player.confirm || player.buyingShare);
+		menuButtonDisabled("investMenu", 2, player.money < db.prices.factory || player.confirm || player.buyingShare);
+		menuButtonDisabled("investMenu", 3, player.money < db.prices.luxury || player.confirm || player.buyingShare);
+		menuButtonDisabled("investMenu", 4, cheapestShare === undefined || player.money < cheapestShare.price || player.confirm);
+		menuButtonDisabled("investMenu", 5, player.money < db.prices.officer || player.confirm || player.buyingShare);
+		menuButtonDisabled("investMenu", 6, player.money < db.prices.manager || player.confirm || player.buyingShare);
 
-		document.elements.investMenu.itemsDef[4].items[0].disabled = player.money < db.prices.share[0];
-		document.elements.investMenu.itemsDef[4].items[1].disabled = player.money < db.prices.share[1];
-		document.elements.investMenu.itemsDef[4].items[2].disabled = player.money < db.prices.share[2];
-		document.elements.investMenu.itemsDef[4].items[3].disabled = player.money < db.prices.share[3];
+		for(let i = 0; i < db.company.shares.length; i++){
+			document.elements.investMenu.itemsDef[4].items[i].content = `  ${db.company.shares[i].price}C  `;
+			document.elements.investMenu.itemsDef[4].items[i].disabled = player.money < db.company.shares[i].price || db.company.shares[i].playerId != 0 || player.confirm;
+		}
+		
+		if(player.confirm){
+			let posY = document.elements.investMenu.outputY + document.elements.investMenu.outputHeight;
+			await Confirm("Perform action again?", document.elements.investMenu.outputX, posY, confirmSecondInvestSubmit);
+		}
 
 		menuRedraw("investMenu");
 	}else{
@@ -358,10 +394,7 @@ async function resetGame(){
 		"factory": 5,
 		"luxury": 4,
 		"officer": 0,
-		"manager": 0,
-		"share": [
-			2, 3, 4, 5
-		]
+		"manager": 0
 	}
 
 	let obj = await db.createObject("prices", prices);
@@ -381,22 +414,57 @@ async function resetGame(){
 		"lastAction": ""
 	}
 
-	obj = await db.createRow("players", player1);
-	await obj.update();
+	let tab = await db.createTable("players");
+	await tab.update();
+
+	let row = await tab.createRow(player1);
+	await row.update();
 
 	let player2 = {
     "id": 2,
     "money": 10
 	}
 
-	obj = await db.createRow("players", player2);
+	row = await tab.createRow(player2);
+	await row.update();
+
+	let company = {
+    "money": 5,
+		"shares": [
+			{
+				"price": 2,
+				"playerId": 0
+			},
+			{
+				"price": 3,
+				"playerId": 0
+			},
+			{
+				"price": 3,
+				"playerId": 0
+			},
+			{
+				"price": 4,
+				"playerId": 0
+			},
+			{
+				"price": 5,
+				"playerId": 0
+			},
+		]
+	}
+
+	obj = await db.createObject("company", company);
 	await obj.update();
+
+	tab = await db.createTable("spaceyards");
+	await tab.update();
 }
 
 async function buySpaceyard(playerId){
 	let res = true;
 
-	let player = playerHelper.getPlayer(playerId);
+	let player = db.players.get(playerId);
 	if(player.money < db.prices.spaceyard) return false;
 
   let yard = {
@@ -406,12 +474,22 @@ async function buySpaceyard(playerId){
     "spaceshipLocation": 'docking'
   }
 
-	let obj = await db.createRow("spaceyards", yard);
+	let obj = await db.spaceyards.createRow(yard);
 	await obj.update();
 
 	player.money -= db.prices.spaceyard;
-	player.lastAction = "spaceyard";
-	await player.update();
 
 	return res;
+}
+
+async function buyShare(playerId, share){
+	let player = db.players.get(playerId);
+
+	player.lastAction = "share";
+	let sI = parseInt(share.substring(5));
+	db.company.shares[sI].playerId = 1;
+	db.company.update();
+
+	player.money -= db.company.shares[sI].price;
+	delete player.buyingShare;
 }

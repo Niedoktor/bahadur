@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
 const path = require("path");
-const chokidar = require('chokidar');
-const { enableCompileCache } = require('module');
+//const chokidar = require('chokidar');
 
 let watcher;
 let rootPath;
@@ -13,32 +12,72 @@ let db = {
       db[key] = {};
     }
     db[key] = {...db[key], ...data};
+
+    if(messageLog) messageLog(`db.createObject: ${key}`);
   
     return db.create(`${rootPath}/${key}.json`, key, db[key]);
   },
 
-  createRow: async function(key, data, idx){
-    if(!db.hasOwnProperty(key)){
-      db[key] = [];
-    }
-    if(idx === undefined){
-      if(!db.indices.hasOwnProperty(key)){
-        db.indices[key] = -1;
-      }
-      idx = ++db.indices[key];
-      await db.updateIndices();
-    }else{
-      if(!db.indices.hasOwnProperty(key)){
-        db.indices[key] = idx;
-        await db.updateIndices();
-      }else if(db.indices[key] < idx) db.indices[key] = idx;
-    }
-    if(db[key][idx] === undefined){
-      db[key][idx] = {};
-    }
-    db[key][idx] = {...db[key][idx], ...data};
+  createTable: async function(key){
+    db[key] = [];
 
-    return db.create(`${rootPath}/${key}/${idx}.json`, key, db[key][idx], idx);
+    db[key].get = (id) => {
+      if(db[key].length == 0) return undefined;
+      return db[key].find(o => o.id == id);
+    }
+
+    db[key].count = (filter) => {
+      if(db[key].length == 0) return 0;
+      return db[key].filter(filter).length;
+    }
+
+    db[key].update = async () => {
+      try{
+        await fs.mkdir(`${rootPath}/${key}`, {} , (err) => {
+          if (err) throw err;
+        });
+      }catch{}
+    }
+    
+    db[key].delete = async () => {
+      try {
+        await fs.access(`${rootPath}/${key}`, fs.constants.F_OK);
+        await fs.rm(`${rootPath}/${key}`, { recursive: true }, (err) => {
+          if (err) throw err;
+        });
+      } catch {}
+
+      delete db[key];
+      
+      if(messageLog) messageLog(`db.deleteTable: ${key}`);
+    }
+
+    db[key].createRow = async (data, idx) => {
+      if(idx === undefined){
+        if(!db.indices.hasOwnProperty(key)){
+          db.indices[key] = -1;
+        }
+        idx = ++db.indices[key];
+        await db.updateIndices();
+      }else{
+        if(!db.indices.hasOwnProperty(key)){
+          db.indices[key] = idx;
+          await db.updateIndices();
+        }else if(db.indices[key] < idx) db.indices[key] = idx;
+      }
+      if(db[key][idx] === undefined){
+        db[key][idx] = {};
+      }
+      db[key][idx] = {...db[key][idx], ...data};
+
+      if(messageLog) messageLog(`db.createRow: ${key}/${idx}`);
+
+      return db.create(`${rootPath}/${key}/${idx}.json`, key, db[key][idx], idx);
+    }
+
+    if(messageLog) messageLog(`db.createTable: ${key}`);
+
+    return db[key];
   },
 
   load: async function(filePath, data){
@@ -46,9 +85,9 @@ let db = {
     let key = file.dir === '' ? file.name : file.dir;
     let idx = file.dir === '' ? undefined : file.name;
 
-    if(messageLog) messageLog(`db.load: ${filePath}`);
+    if(messageLog) messageLog(`db.loadFile: ${filePath}`);
 
-    let obj = idx === undefined ? db.createObject(key, data) : db.createRow(key, data, idx);
+    let obj = idx === undefined ? db.createObject(key, data) : db[key].createRow(data, idx);
 
     return obj;
   },
@@ -61,9 +100,9 @@ let db = {
       //   await watcher.unwatch(filePath);
       // }catch{}
 
-      await fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
-        if (err) throw err;
-      });
+      if(idx !== undefined){
+        await db[key].update();
+      }
 
       await fs.writeFile(filePath, JSON.stringify(data, null, 4), function (err) {
         if (err) throw err;
@@ -102,8 +141,6 @@ let db = {
       if(messageLog) messageLog(`db.delete: ${filePath}`);
     }
 
-    if(messageLog) messageLog(`db.create: ${filePath}`);
-
     return obj;
   },
 
@@ -131,9 +168,13 @@ let db = {
 
     db.initIndices();
 
-    for await (const filePath of getFiles(root)) {
-      const data = await fs.readFile(filePath);
-      db.load(filePath, JSON.parse(data));
+    const files = await getFiles(rootPath);
+    for (const file of files) {
+      if(file.isDir && !db.hasOwnProperty(file.name)) await db.createTable(file.name);
+      if(!file.isDir){
+        const data = await fs.readFile(file.path);
+        db.load(file.path, JSON.parse(data));
+      }
     }
     
     // watcher = chokidar.watch(root, { ignored: (f, stats) => f.indexOf("indices.json") !== -1})
@@ -168,25 +209,36 @@ let db = {
   },
 
   deleteAll: async function(){
-    for await (const filePath of getFiles(rootPath)) {
-      await db.delete(filePath);
+    const files = await getFiles(rootPath);
+    for (const file of files) {
+      if(file.dir == "") await db.delete(file.path);
     }
     db.indices = {};
+    try{
+      await fs.rm(rootPath + "/indices.json", { }, (err) => {
+        if (err) throw err;
+      });
+    }catch{}
   }
 };
 
-async function* getFiles(dir) {
-  const dirents = await fs.readdir(dir, { withFileTypes: true });
+async function getFiles(path, dir = "") {
+  let files = [];
 
-  for (const dirent of dirents) {
-    const filePath = `${dir}/${dirent.name}`;
+  const dirents = await fs.readdir(path, { withFileTypes: true });
+
+  for(const dirent of dirents){
+    const filePath = `${path}/${dirent.name}`;
     if(dirent.name === 'indices.json') continue;
     if (dirent.isDirectory()) {
-      yield* getFiles(filePath);
+      files.push({ name: dirent.name, dir: dir, path: filePath, isDir: true });
+      let filesInDir = await getFiles(filePath, dirent.name);
+      files = files.concat(filesInDir);
     } else {
-      yield filePath;
+      files.push({ name: dirent.name, dir: dir, path: filePath, isDir: false });
     }
-  }
+  };
+  return files;
 }
 
 exports = module.exports = db;
