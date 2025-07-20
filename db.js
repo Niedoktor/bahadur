@@ -20,6 +20,8 @@ let db = {
 
   createTable: async function(key){
     db[key] = [];
+    db.indices[key] = -1;
+    await db.updateIndices();
 
     db[key].get = (id) => {
       if(db[key].length == 0) return undefined;

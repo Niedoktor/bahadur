@@ -1,3 +1,5 @@
 {
-    "players": 1
+    "players": "1",
+    "offices": "3",
+    "spaceyards": -1
 }

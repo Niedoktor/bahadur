@@ -64,20 +64,27 @@ async function init(){
 			rows: [
 				{
 					id: 'row1',
-					heightPercent: 80,
+					heightPercent: 40,
 					columns: [
-						{ id: 'game' }
+						{ id: 'company' }
 					]
 				},
 				{
 					id: 'row2',
+					heightPercent: 40,
+					columns: [
+						{ id: 'player' }
+					]
+				},
+				{
+					id: 'row3',
 					height: 3,
 					columns: [
 						{ id: 'menu' }
 					]
 				},
 				{
-					id: 'row3',
+					id: 'row4',
 					columns: [
 						{ id: 'log' }
 					]
@@ -92,9 +99,32 @@ async function init(){
 		log.print(msg);
 	});
 
-	let topBar = new termkit.RowMenu({
-		parent: document.elements.game,
-		id: "topBar",
+	let companyBar = new termkit.RowMenu({
+		parent: document.elements.company,
+		id: "companyBar",
+		x: 0,
+		y: 0,
+		separator: '|',
+		justify: false,
+		items: [
+			{
+				content: ' ^[black]COMPANY ',
+				disabled: true,
+				markup: true
+			},
+			{
+				content: ' Money ',
+				disabled: true,
+				markup: true
+			}
+		]
+	});
+
+	companyBar.on('submit', companyBarSubmit);
+
+	let playerBar = new termkit.RowMenu({
+		parent: document.elements.player,
+		id: "playerBar",
 		x: 0,
 		y: 0,
 		separator: '|',
@@ -123,10 +153,10 @@ async function init(){
 		]
 	});
 
-	topBar.on('submit', topBarSubmit);
+	playerBar.on('submit', playerBarSubmit);
 
 	let investMenu = new termkit.ColumnMenu({
-		parent: document.elements.game,
+		parent: document.elements.player,
 		id: "investMenu",
 		x: 2,
 		y: 2,
@@ -200,7 +230,7 @@ async function init(){
 			},
 			{
 				content: '',
-				value: 'manager',
+				value: 'executive',
 				markup: true
 			}
 		]
@@ -233,7 +263,7 @@ async function init(){
 
 async function Confirm(prompt, x, y, callback){
 	let confirm = new termkit.InlineMenu({
-		parent: document.elements.game,
+		parent: document.elements.player,
 		id: "confirm",
 		x: x,
 		y: y,
@@ -323,7 +353,10 @@ async function gameMenuSubmit(value) {
 	}
 }
 
-function topBarSubmit(value) {
+function playerBarSubmit(value) {
+}
+
+function companyBarSubmit(value) {
 }
 
 function menuRedraw(menu){
@@ -344,12 +377,16 @@ function menuButtonDisabled(menu, idx, disabled){
 async function refreshUI(){
 	let player = db.players.get(1);
 
-	menuButtonContent("topBar", 0, ` ^[black]${db.main.turn} `);
-	menuButtonContent("topBar", 1, ` ^[black]${db.main.phase} `);
-	menuButtonContent("topBar", 2, ` Money: ^[black]${player.money} `);
-	menuButtonContent("topBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
+	menuButtonContent("playerBar", 0, ` ^[black]${db.main.turn} `);
+	menuButtonContent("playerBar", 1, ` ^[black]${db.main.phase} `);
+	menuButtonContent("playerBar", 2, ` Money: ^[black]${player.money} `);
+	menuButtonContent("playerBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
 
-	menuRedraw("topBar");
+	menuRedraw("playerBar");
+
+	menuButtonContent("companyBar", 1, ` Money: ^[black]${db.company.money} `);
+
+	menuRedraw("companyBar");
 
 	if(db.main.phase == "invest"){
 		document.elements.investMenu.show();
@@ -359,7 +396,7 @@ async function refreshUI(){
 		menuButtonContent("investMenu", 3, `  ${player.lastAction == "luxury" ? "^+" : ""}Buy Luxury ${player.lastAction == "luxury" ? "x2" : "  "}    ${db.prices.luxury}C  `);
 		menuButtonContent("investMenu", 4, `  ${player.lastAction == "share" ? "^+" : ""}Buy Share ${player.lastAction == "share" ? "x2" : "  "}        ►`);
 		menuButtonContent("investMenu", 5, `  ${player.lastAction == "officer" ? "^+" : ""}Hire Officer ${player.lastAction == "officer" ? "x2" : "  "}  ${db.prices.officer}C  `);
-		menuButtonContent("investMenu", 6, `  ${player.lastAction == "manager" ? "^+" : ""}Hire Manager ${player.lastAction == "manager" ? "x2" : "  "}  ${db.prices.manager}C ►`);
+		menuButtonContent("investMenu", 6, `  ${player.lastAction == "executive" ? "^+" : ""}Hire Executive ${player.lastAction == "executive" ? "x2" : "  "}${db.prices.executive}C ►`);
 
 		let cheapestShare = db.company.shares.find(o => o.playerId == 0);
 
@@ -368,7 +405,7 @@ async function refreshUI(){
 		menuButtonDisabled("investMenu", 3, player.money < db.prices.luxury || player.confirm || player.buyingShare);
 		menuButtonDisabled("investMenu", 4, cheapestShare === undefined || player.money < cheapestShare.price || player.confirm);
 		menuButtonDisabled("investMenu", 5, player.money < db.prices.officer || player.confirm || player.buyingShare);
-		menuButtonDisabled("investMenu", 6, player.money < db.prices.manager || player.confirm || player.buyingShare);
+		menuButtonDisabled("investMenu", 6, player.money < db.prices.executive || player.confirm || player.buyingShare);
 
 		for(let i = 0; i < db.company.shares.length; i++){
 			document.elements.investMenu.itemsDef[4].items[i].content = `  ${db.company.shares[i].price}C  `;
@@ -394,7 +431,7 @@ async function resetGame(){
 		"factory": 5,
 		"luxury": 4,
 		"officer": 0,
-		"manager": 0
+		"executive": 0
 	}
 
 	let obj = await db.createObject("prices", prices);
@@ -457,6 +494,55 @@ async function resetGame(){
 	obj = await db.createObject("company", company);
 	await obj.update();
 
+	tab = await db.createTable("offices");
+	await tab.update();
+
+	let office = {
+		"id": db.indices.offices + 2,
+		"name": "chairman",
+		"playerId": 0,
+		"hasTreasury": false,
+		"hasExecutives": false
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"id": db.indices.offices + 2,
+		"name": "tradeDirector",
+		"playerId": 0,
+		"hasTreasury": true,
+		"money": 3,
+		"hasExecutives": false
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"id": db.indices.offices + 2,
+		"name": "shippingManager",
+		"playerId": 0,
+		"hasTreasury": true,
+		"money": 3,
+		"hasExecutives": false
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"id": db.indices.offices + 2,
+		"name": "militaryAffairs",
+		"playerId": 0,
+		"hasTreasury": false,
+		"hasExecutives": false
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
 	tab = await db.createTable("spaceyards");
 	await tab.update();
 }
@@ -468,7 +554,7 @@ async function buySpaceyard(playerId){
 	if(player.money < db.prices.spaceyard) return false;
 
   let yard = {
-		"id": db.indices.hasOwnProperty("spaceyards") ? db.indices.spaceyards + 2 : 1,
+		"id": db.indices.spaceyards + 2,
     "ownerId": playerId,
 		"spaceshipName": helpers.toCapitalCase(faker.word.words({ count: { min: 1, max: 2 }})),		
     "spaceshipLocation": 'docking'
