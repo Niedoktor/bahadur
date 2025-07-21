@@ -63,28 +63,36 @@ async function init(){
 			heightPercent: 100,
 			rows: [
 				{
-					id: 'row1',
-					heightPercent: 40,
+					id: 'companyRow',
 					columns: [
 						{ id: 'company' }
 					]
 				},
 				{
-					id: 'row2',
-					heightPercent: 40,
+					id: 'mapRow',
+					height: 9,
+					columns: [
+						{ id: 'systemMap1' },
+						{ id: 'systemMap2' },
+						{ id: 'systemMap3' }
+					]
+				},
+				{
+					id: 'playerRow',
+					heightPercent: 30,
 					columns: [
 						{ id: 'player' }
 					]
 				},
 				{
-					id: 'row3',
+					id: 'menuRow',
 					height: 3,
 					columns: [
 						{ id: 'menu' }
 					]
 				},
 				{
-					id: 'row4',
+					id: 'logRow',
 					columns: [
 						{ id: 'log' }
 					]
@@ -257,6 +265,87 @@ async function init(){
 	gameMenu.on('submit', gameMenuSubmit);
 
 	//await resetGame();
+
+	let w = document.elements.systemMap1.outputWidth;
+
+	let cmItems = [
+		{
+			content: '^[bgWhite] System 1'.padEnd(w + 10, ' '),
+			disabled: true,
+			markup: true
+		}
+	]
+
+	db.planets.filter(o => o.systemId == 1).forEach((p) => {
+		cmItems.push({
+			content: ` ${p.name}`.padEnd(w, ' '),
+			markup: true
+		});
+	});
+
+	let systemMenu = new termkit.ColumnMenu({
+		parent: document.elements.systemMap1,
+		id: "system1",
+		x: 0,
+		y: 0,
+		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
+		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
+		items: cmItems
+	});
+
+	w = document.elements.systemMap2.outputWidth;
+
+	cmItems = [
+		{
+			content: '^[bgWhite] System 2'.padEnd(w + 10, ' '),
+			disabled: true,
+			markup: true
+		}
+	]
+
+	db.planets.filter(o => o.systemId == 2).forEach((p) => {
+		cmItems.push({
+			content: ` ${p.name}`.padEnd(w, ' '),
+			markup: true
+		});
+	});
+
+	systemMenu = new termkit.ColumnMenu({
+		parent: document.elements.systemMap2,
+		id: "system2",
+		x: 0,
+		y: 0,
+		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
+		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
+		items: cmItems
+	});
+
+	w = document.elements.systemMap3.outputWidth;
+
+	cmItems = [
+		{
+			content: '^[bgWhite] System 3'.padEnd(w + 10, ' '),
+			disabled: true,
+			markup: true
+		}
+	]
+
+	db.planets.filter(o => o.systemId == 3).forEach((p) => {
+		cmItems.push({
+			content: ` ${p.name}`.padEnd(w, ' '),
+			markup: true
+		});
+	});
+
+	systemMenu = new termkit.ColumnMenu({
+		parent: document.elements.systemMap3,
+		id: "system3",
+		x: 0,
+		y: 0,
+		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
+		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
+		items: cmItems
+	});
 
 	refreshUI();
 }
@@ -545,6 +634,36 @@ async function resetGame(){
 
 	tab = await db.createTable("spaceyards");
 	await tab.update();
+
+	tab = await db.createTable("systems");
+	await tab.update();
+
+	tab = await db.createTable("planets");
+	await tab.update();
+
+	for(let i = 0; i < 3; i++){
+		let system = {
+			"id": db.indices.systems + 2,
+			"name": "System " + (i + 1)
+		}
+
+		row = await db.systems.createRow(system);
+		await row.update();
+
+		let order = 1;
+		for(let j = 0; j < 3 + system.id; j++){
+			let planet = {
+				"id": db.indices.planets + 2,
+				"playerId": 0,
+				"name": `${system.id}.${order}`,
+				"systemId": system.id,
+				"order": order++
+			}
+
+			row = await db.planets.createRow(planet);
+			await row.update();
+		}
+	}
 }
 
 async function buySpaceyard(playerId){
@@ -555,7 +674,7 @@ async function buySpaceyard(playerId){
 
   let yard = {
 		"id": db.indices.spaceyards + 2,
-    "ownerId": playerId,
+    "playerId": playerId,
 		"spaceshipName": helpers.toCapitalCase(faker.word.words({ count: { min: 1, max: 2 }})),		
     "spaceshipLocation": 'docking'
   }
