@@ -1,8 +1,8 @@
 {
-    "id": 2,
     "name": "tradeDirector",
     "playerId": 0,
     "hasTreasury": true,
     "money": 3,
-    "hasExecutives": false
+    "hasExecutives": false,
+    "id": 2
 }

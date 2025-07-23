@@ -1,7 +1,8 @@
 {
-    "players": "1",
-    "offices": "3",
+    "players": 1,
+    "offices": 6,
     "spaceyards": -1,
-    "systems": -1,
-    "planets": "9"
+    "systems": 2,
+    "persons": -1,
+    "planets": 14
 }

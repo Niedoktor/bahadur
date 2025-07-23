@@ -1,7 +1,8 @@
 const termkit = require('terminal-kit');
 
 let log = {
-  init: async (parent) => {
+  messages: "",
+  createTextBox: async (parent) => {
     log.parent = parent;
     log.tb = new termkit.TextBox({
       parent: parent,
@@ -13,14 +14,16 @@ let log = {
       scrollable: true,
       vScrollBar : true,
       contentHasMarkup: true,
+      content: log.messages
       //textAttr: { bgColor: 'gray' },
       //voidAttr: { bgColor: 'gray' }
     });
-    log.print("log.init");
+    log.tb.scrollToBottom();
   },
 
-  print: (msg) => {
-    log.tb.appendLog(msg);
+  append: (msg) => {
+    log.messages += msg + "\n";
+    if(log.tb) log.tb.appendLog(msg);
   }
 }
 

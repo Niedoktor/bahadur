@@ -1,7 +1,7 @@
 {
-    "id": 1,
     "playerId": 0,
     "name": "1.1",
     "systemId": 1,
-    "order": 1
+    "order": 1,
+    "id": 1
 }

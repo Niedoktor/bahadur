@@ -1,8 +1,8 @@
 {
-    "id": 3,
     "name": "shippingManager",
     "playerId": 0,
     "hasTreasury": true,
     "money": 3,
-    "hasExecutives": false
+    "hasExecutives": false,
+    "id": 3
 }

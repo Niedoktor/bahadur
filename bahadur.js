@@ -3,9 +3,9 @@ const log = require('./log');
 const termkit = require('terminal-kit');
 const { faker } = require('@faker-js/faker');
 const helpers = require('./helpers');
+const ui = require('./ui');
 
 let term;
-let document;
 
 (async () => {
 	termkit.getDetectedTerminal(function(error, terminal) {
@@ -33,7 +33,7 @@ let document;
 		term.on('terminal', function(name, data) {
 			switch (name) {
 				//case 'CURSOR_LOCATION': x = data.x; y = data.y; break;
-				//case 'SCREEN_SIZE' : term('\n').eraseLineAfter.blue("(%s,%s)\n", term.width, term.height); break;
+				case 'SCREEN_SIZE' : refresh(); break;
 			}
 		});
 
@@ -44,341 +44,21 @@ let document;
 		});
 
 		term.clear();
-		init();
 		term.hideCursor(true);
+
+		init();
 	});
 })()
 
 async function init(){
-
-	document = term.createDocument({ palette: new termkit.Palette() });
-	
-	new termkit.Layout({
-		parent: document,
-		boxChars: 'single',
-		layout: {
-			id: 'main',
-			y: 0,
-			widthPercent: 100,
-			heightPercent: 100,
-			rows: [
-				{
-					id: 'companyRow',
-					columns: [
-						{ id: 'company' }
-					]
-				},
-				{
-					id: 'mapRow',
-					height: 9,
-					columns: [
-						{ id: 'systemMap1' },
-						{ id: 'systemMap2' },
-						{ id: 'systemMap3' }
-					]
-				},
-				{
-					id: 'playerRow',
-					heightPercent: 30,
-					columns: [
-						{ id: 'player' }
-					]
-				},
-				{
-					id: 'menuRow',
-					height: 3,
-					columns: [
-						{ id: 'menu' }
-					]
-				},
-				{
-					id: 'logRow',
-					columns: [
-						{ id: 'log' }
-					]
-				}
-			]
-		}
-	});
-
-	await log.init(document.elements.log);
-
 	await db.init('./data', (msg) => {
-		log.print(msg);
+		log.append(msg);
 	});
 
-	let companyBar = new termkit.RowMenu({
-		parent: document.elements.company,
-		id: "companyBar",
-		x: 0,
-		y: 0,
-		separator: '|',
-		justify: false,
-		items: [
-			{
-				content: ' ^[black]COMPANY ',
-				disabled: true,
-				markup: true
-			},
-			{
-				content: ' Money ',
-				disabled: true,
-				markup: true
-			}
-		]
-	});
+	if(db.count == 0) await resetGame();
 
-	companyBar.on('submit', companyBarSubmit);
-
-	let playerBar = new termkit.RowMenu({
-		parent: document.elements.player,
-		id: "playerBar",
-		x: 0,
-		y: 0,
-		separator: '|',
-		justify: false,
-		items: [
-			{
-				content: ' Turn ',
-				disabled: true,
-				markup: true
-			},
-			{
-				content: ' Phase ',
-				disabled: true,
-				markup: true
-			},
-			{
-				content: ' Money ',
-				disabled: true,
-				markup: true
-			},
-			{
-				content: ' Yards ',
-				disabled: true,
-				markup: true
-			}
-		]
-	});
-
-	playerBar.on('submit', playerBarSubmit);
-
-	let investMenu = new termkit.ColumnMenu({
-		parent: document.elements.player,
-		id: "investMenu",
-		x: 2,
-		y: 2,
-		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
-		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
-		submenu: {
-			disposition: 'byside',
-			hideParent: false,
-			openOn: 'parentFocus',
-			closeOn: 'childSubmit',
-			focusOnOpen: false,
-			//*/
-		},		
-		items: [
-			{
-				content: '^[bgWhite]     Choose action     ',
-				disabled: true,
-				markup: true
-			},
-			{
-				content: '',
-				value: 'spaceyard',
-				markup: true
-			},
-			{
-				content: '',
-				value: 'factory',
-				markup: true
-			},
-			{
-				content: '',
-				value: 'luxury',
-				markup: true
-			},
-			{
-				content: '',
-				value: 'share',
-				markup: true,
-				items: [
-					{
-						content: '',
-						value: 'share0',
-						markup: true
-					},
-					{
-						content: '',
-						value: 'share1',
-						markup: true
-					},
-					{
-						content: '',
-						value: 'share2',
-						markup: true
-					},
-					{
-						content: '',
-						value: 'share3',
-						markup: true
-					},
-					{
-						content: '',
-						value: 'share4',
-						markup: true
-					}
-				]
-			},
-			{
-				content: '',
-				value: 'officer',
-				markup: true
-			},
-			{
-				content: '',
-				value: 'executive',
-				markup: true
-			}
-		]
-	});
-
-	investMenu.on('submit', investMenuSubmit);
-
-	let gameMenu = new termkit.RowMenu({
-		parent: document.elements.menu,
-		id: "gameMenu",
-		x: 0,
-		y: 0,
-		autoWidth: true,
-		separator: '|',
-		justify: false,		
-		items: [
-			{
-				content: ' RESET ',
-				value: 'reset'
-			}
-		]
-	});
-
-	gameMenu.on('submit', gameMenuSubmit);
-
-	//await resetGame();
-
-	let w = document.elements.systemMap1.outputWidth;
-
-	let cmItems = [
-		{
-			content: '^[bgWhite] System 1'.padEnd(w + 10, ' '),
-			disabled: true,
-			markup: true
-		}
-	]
-
-	db.planets.filter(o => o.systemId == 1).forEach((p) => {
-		cmItems.push({
-			content: ` ${p.name}`.padEnd(w, ' '),
-			markup: true
-		});
-	});
-
-	let systemMenu = new termkit.ColumnMenu({
-		parent: document.elements.systemMap1,
-		id: "system1",
-		x: 0,
-		y: 0,
-		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
-		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
-		items: cmItems
-	});
-
-	w = document.elements.systemMap2.outputWidth;
-
-	cmItems = [
-		{
-			content: '^[bgWhite] System 2'.padEnd(w + 10, ' '),
-			disabled: true,
-			markup: true
-		}
-	]
-
-	db.planets.filter(o => o.systemId == 2).forEach((p) => {
-		cmItems.push({
-			content: ` ${p.name}`.padEnd(w, ' '),
-			markup: true
-		});
-	});
-
-	systemMenu = new termkit.ColumnMenu({
-		parent: document.elements.systemMap2,
-		id: "system2",
-		x: 0,
-		y: 0,
-		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
-		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
-		items: cmItems
-	});
-
-	w = document.elements.systemMap3.outputWidth;
-
-	cmItems = [
-		{
-			content: '^[bgWhite] System 3'.padEnd(w + 10, ' '),
-			disabled: true,
-			markup: true
-		}
-	]
-
-	db.planets.filter(o => o.systemId == 3).forEach((p) => {
-		cmItems.push({
-			content: ` ${p.name}`.padEnd(w, ' '),
-			markup: true
-		});
-	});
-
-	systemMenu = new termkit.ColumnMenu({
-		parent: document.elements.systemMap3,
-		id: "system3",
-		x: 0,
-		y: 0,
-		buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
-		buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
-		items: cmItems
-	});
-
-	refreshUI();
-}
-
-async function Confirm(prompt, x, y, callback){
-	let confirm = new termkit.InlineMenu({
-		parent: document.elements.player,
-		id: "confirm",
-		x: x,
-		y: y,
-		prompt: {
-			textAttr: { bgColor: 'blue', color: 'white' },
-			content: " " + prompt + " ",
-			contentHasMarkup: true
-		},
-		width: prompt.length + 12,
-		items: [
-			{
-				content: ' Yes ',
-				value: 'yes'
-			},
-			{
-				content: ' No ',
-				value: 'no'
-			},
-			// {
-			// 	content: 'Abort',
-			// 	value: 'abort'
-			// }
-		]
-	});
-
-	confirm.on('submit', callback);
+	ui.init(term);
+	refresh();
 }
 
 async function confirmSecondInvestSubmit(value) {
@@ -387,19 +67,15 @@ async function confirmSecondInvestSubmit(value) {
 	delete player.confirm;
 
 	if(value == "yes"){
-		if(player.lastAction.startsWith("share")){
+		if(player.lastAction == "share"){
 			player.buyingShare = true;
-			player.update();
 		}else{
 			await investAction(player.lastAction);
 		}
-	}else{
-		player.update();
 	}
+	player.update();
 
-	document.elements.confirm.destroy();
-
-	refreshUI();
+	refresh();
 }
 
 async function investMenuSubmit(value) {
@@ -414,22 +90,24 @@ async function investMenuSubmit(value) {
 		player.confirm = true;
 	}
 
+	if(value.startsWith("share")){
+		player.lastAction = "share";
+	}else{
+		player.lastAction = value;
+	}
 	player.update();
 	
-	refreshUI();
+	refresh();
 }
 
 async function investAction(value){
-	let player = db.players.get(1);
-
 	if(value.startsWith("share")){
 		await buyShare(1, value);
-		document.elements.investMenu.closeSubmenu();
+		ui.document.elements.investMenu.closeSubmenu();
 	}else{
 		switch(value){
 			case "spaceyard": await buySpaceyard(1); break;
 		}
-		player.lastAction = value;
 	}
 }
 
@@ -437,7 +115,7 @@ async function gameMenuSubmit(value) {
 	switch(value){
 		case "reset": {
 			await resetGame();
-			refreshUI();
+			refresh();
 		} break;
 	}
 }
@@ -448,71 +126,58 @@ function playerBarSubmit(value) {
 function companyBarSubmit(value) {
 }
 
-function menuRedraw(menu){
-	document.elements[menu].clear();
-	document.elements[menu].pageItemsDef = [];
-	document.elements[menu].initChildren();
-	document.elements[menu].draw();
-}
+// function menuRedraw(menu){
+// 	document.elements[menu].clear();
+// 	document.elements[menu].pageItemsDef = [];
+// 	document.elements[menu].initChildren();
+// 	document.elements[menu].draw();
+// }
 
-function menuButtonContent(menu, idx, content){
-	document.elements[menu].itemsDef[idx].content = content;
-}
+// function menuButtonContent(menu, idx, content){
+// 	document.elements[menu].itemsDef[idx].content = content;
+// }
 
-function menuButtonDisabled(menu, idx, disabled){
-	document.elements[menu].itemsDef[idx].disabled = disabled;
-}
+// function menuButtonDisabled(menu, idx, disabled){
+// 	document.elements[menu].itemsDef[idx].disabled = disabled;
+// }
 
-async function refreshUI(){
-	let player = db.players.get(1);
-
-	menuButtonContent("playerBar", 0, ` ^[black]${db.main.turn} `);
-	menuButtonContent("playerBar", 1, ` ^[black]${db.main.phase} `);
-	menuButtonContent("playerBar", 2, ` Money: ^[black]${player.money} `);
-	menuButtonContent("playerBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
-
-	menuRedraw("playerBar");
-
-	menuButtonContent("companyBar", 1, ` Money: ^[black]${db.company.money} `);
-
-	menuRedraw("companyBar");
+async function refresh(){
+	await ui.refresh();
+	ui.document.elements.companyBar.on('submit', companyBarSubmit);
+	ui.document.elements.playerBar.on('submit', playerBarSubmit);
+  ui.document.elements.gameMenu.on('submit', gameMenuSubmit);
 
 	if(db.main.phase == "invest"){
-		document.elements.investMenu.show();
-
-		menuButtonContent("investMenu", 1, `  ${player.lastAction == "spaceyard" ? "^+" : ""}Buy Spaceyard ${player.lastAction == "spaceyard" ? "x2" : "  "} ${db.prices.spaceyard}C  `);
-		menuButtonContent("investMenu", 2, `  ${player.lastAction == "factory" ? "^+" : ""}Buy Factory ${player.lastAction == "factory" ? "x2" : "  "}   ${db.prices.factory}C  `);
-		menuButtonContent("investMenu", 3, `  ${player.lastAction == "luxury" ? "^+" : ""}Buy Luxury ${player.lastAction == "luxury" ? "x2" : "  "}    ${db.prices.luxury}C  `);
-		menuButtonContent("investMenu", 4, `  ${player.lastAction == "share" ? "^+" : ""}Buy Share ${player.lastAction == "share" ? "x2" : "  "}        ►`);
-		menuButtonContent("investMenu", 5, `  ${player.lastAction == "officer" ? "^+" : ""}Hire Officer ${player.lastAction == "officer" ? "x2" : "  "}  ${db.prices.officer}C  `);
-		menuButtonContent("investMenu", 6, `  ${player.lastAction == "executive" ? "^+" : ""}Hire Executive ${player.lastAction == "executive" ? "x2" : "  "}${db.prices.executive}C ►`);
-
-		let cheapestShare = db.company.shares.find(o => o.playerId == 0);
-
-		menuButtonDisabled("investMenu", 1, player.money < db.prices.spaceyard || player.confirm || player.buyingShare);
-		menuButtonDisabled("investMenu", 2, player.money < db.prices.factory || player.confirm || player.buyingShare);
-		menuButtonDisabled("investMenu", 3, player.money < db.prices.luxury || player.confirm || player.buyingShare);
-		menuButtonDisabled("investMenu", 4, cheapestShare === undefined || player.money < cheapestShare.price || player.confirm);
-		menuButtonDisabled("investMenu", 5, player.money < db.prices.officer || player.confirm || player.buyingShare);
-		menuButtonDisabled("investMenu", 6, player.money < db.prices.executive || player.confirm || player.buyingShare);
-
-		for(let i = 0; i < db.company.shares.length; i++){
-			document.elements.investMenu.itemsDef[4].items[i].content = `  ${db.company.shares[i].price}C  `;
-			document.elements.investMenu.itemsDef[4].items[i].disabled = player.money < db.company.shares[i].price || db.company.shares[i].playerId != 0 || player.confirm;
-		}
-		
-		if(player.confirm){
-			let posY = document.elements.investMenu.outputY + document.elements.investMenu.outputHeight;
-			await Confirm("Perform action again?", document.elements.investMenu.outputX, posY, confirmSecondInvestSubmit);
-		}
-
-		menuRedraw("investMenu");
-	}else{
-		document.elements.investMenu.hide();
+		ui.document.elements.investMenu.on('submit', investMenuSubmit);
+		if(ui.document.elements.confirm) ui.document.elements.confirm.on('submit', confirmSecondInvestSubmit);
 	}
+
+// 	let player = db.players.get(1);
+
+// 	menuButtonContent("playerBar", 0, ` ^[black]${db.main.turn} `);
+// 	menuButtonContent("playerBar", 1, ` ^[black]${db.main.phase} `);
+// 	menuButtonContent("playerBar", 2, ` Money: ^[black]${player.money} `);
+// 	menuButtonContent("playerBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
+
+// 	menuRedraw("playerBar");
+
+// 	menuButtonContent("companyBar", 1, ` Money: ^[black]${db.company.money} `);
+
+// 	menuRedraw("companyBar");
+
+// 	if(db.main.phase == "invest"){
+
+		
+
+// 		menuRedraw("investMenu");
+// 	}else{
+// 		document.elements.investMenu.hide();
+// 	}
 }
 
 async function resetGame(){
+	log.append("--- RESET BEGIN!---");
+
 	await db.deleteAll();
 
 	let prices = {
@@ -587,7 +252,6 @@ async function resetGame(){
 	await tab.update();
 
 	let office = {
-		"id": db.indices.offices + 2,
 		"name": "chairman",
 		"playerId": 0,
 		"hasTreasury": false,
@@ -598,7 +262,6 @@ async function resetGame(){
 	await row.update();
 
 	office = {
-		"id": db.indices.offices + 2,
 		"name": "tradeDirector",
 		"playerId": 0,
 		"hasTreasury": true,
@@ -610,7 +273,6 @@ async function resetGame(){
 	await row.update();
 
 	office = {
-		"id": db.indices.offices + 2,
 		"name": "shippingManager",
 		"playerId": 0,
 		"hasTreasury": true,
@@ -622,11 +284,43 @@ async function resetGame(){
 	await row.update();
 
 	office = {
-		"id": db.indices.offices + 2,
 		"name": "militaryAffairs",
 		"playerId": 0,
 		"hasTreasury": false,
 		"hasExecutives": false
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"name": "systemPresident",
+		"playerId": 0,
+		"hasTreasury": true,
+		"hasExecutives": true,
+		"systemId": 1
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"name": "systemPresident",
+		"playerId": 0,
+		"hasTreasury": true,
+		"hasExecutives": true,
+		"systemId": 2
+	}
+
+	row = await tab.createRow(office);
+	await row.update();
+
+	office = {
+		"name": "systemPresident",
+		"playerId": 0,
+		"hasTreasury": true,
+		"hasExecutives": true,
+		"systemId": 3
 	}
 
 	row = await tab.createRow(office);
@@ -638,12 +332,14 @@ async function resetGame(){
 	tab = await db.createTable("systems");
 	await tab.update();
 
+	tab = await db.createTable("persons");
+	await tab.update();
+
 	tab = await db.createTable("planets");
 	await tab.update();
 
 	for(let i = 0; i < 3; i++){
 		let system = {
-			"id": db.indices.systems + 2,
 			"name": "System " + (i + 1)
 		}
 
@@ -653,7 +349,6 @@ async function resetGame(){
 		let order = 1;
 		for(let j = 0; j < 3 + system.id; j++){
 			let planet = {
-				"id": db.indices.planets + 2,
 				"playerId": 0,
 				"name": `${system.id}.${order}`,
 				"systemId": system.id,
@@ -664,6 +359,8 @@ async function resetGame(){
 			await row.update();
 		}
 	}
+
+	log.append("--- RESET DONE!---");
 }
 
 async function buySpaceyard(playerId){
@@ -673,7 +370,6 @@ async function buySpaceyard(playerId){
 	if(player.money < db.prices.spaceyard) return false;
 
   let yard = {
-		"id": db.indices.spaceyards + 2,
     "playerId": playerId,
 		"spaceshipName": helpers.toCapitalCase(faker.word.words({ count: { min: 1, max: 2 }})),		
     "spaceshipLocation": 'docking'
@@ -690,7 +386,6 @@ async function buySpaceyard(playerId){
 async function buyShare(playerId, share){
 	let player = db.players.get(playerId);
 
-	player.lastAction = "share";
 	let sI = parseInt(share.substring(5));
 	db.company.shares[sI].playerId = 1;
 	db.company.update();

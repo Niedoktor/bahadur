@@ -7,6 +7,8 @@ let rootPath;
 let messageLog;
 
 let db = {
+  count: 0,
+  
   createObject: async function(key, data){
     if(!db.hasOwnProperty(key)){
       db[key] = {};
@@ -61,6 +63,7 @@ let db = {
         }
         idx = ++db.indices[key];
         await db.updateIndices();
+        if(!data.hasOwnProperty("id")) data.id = idx + 1;
       }else{
         if(!db.indices.hasOwnProperty(key)){
           db.indices[key] = idx;
@@ -172,10 +175,14 @@ let db = {
 
     const files = await getFiles(rootPath);
     for (const file of files) {
-      if(file.isDir && !db.hasOwnProperty(file.name)) await db.createTable(file.name);
+      if(file.isDir && !db.hasOwnProperty(file.name)){
+        await db.createTable(file.name);
+        db.count++;
+      }
       if(!file.isDir){
         const data = await fs.readFile(file.path);
         db.load(file.path, JSON.parse(data));
+        db.count++;
       }
     }
     
