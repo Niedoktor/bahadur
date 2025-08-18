@@ -1,7 +1,8 @@
 {
     "name": "militaryAffairs",
-    "playerId": 0,
+    "personId": 0,
     "hasTreasury": false,
     "hasExecutives": false,
+    "ensigns": [],
     "id": 4
 }

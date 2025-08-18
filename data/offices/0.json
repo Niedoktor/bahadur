@@ -1,6 +1,6 @@
 {
     "name": "chairman",
-    "playerId": 0,
+    "personId": 0,
     "hasTreasury": false,
     "hasExecutives": false,
     "id": 1

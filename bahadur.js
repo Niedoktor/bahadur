@@ -30,17 +30,14 @@ let term;
 			}
 		});
 
-		term.on('terminal', function(name, data) {
-			switch (name) {
-				//case 'CURSOR_LOCATION': x = data.x; y = data.y; break;
-				case 'SCREEN_SIZE' : refresh(); break;
-			}
-		});
-
 		term.on('mouse', function(name, data) {
 			switch (name) {
 			}
 			//console.log( "'mouse' event:" , name , data ) ;
+		});
+
+		term.on('resize', function() {
+			refresh();
 		});
 
 		term.clear();
@@ -69,6 +66,8 @@ async function confirmSecondInvestSubmit(value) {
 	if(value == "yes"){
 		if(player.lastAction == "share"){
 			player.buyingShare = true;
+		}else	if(player.lastAction == "executive"){
+			player.hiringExecutive = true;
 		}else{
 			await investAction(player.lastAction);
 		}
@@ -83,15 +82,18 @@ async function investMenuSubmit(value) {
 
 	await investAction(value);
 
-	let cheapestShare = db.company.shares.find(o => o.playerId == 0);
+	let cheapestShare = db.company.shares.find(o => o.personId == 0);
 	
-	if((player.lastAction == value && player.money >= db.prices[value]) ||
-		(player.lastAction == "share" && value.startsWith("share") && cheapestShare !== undefined && player.money >= cheapestShare.price)){
+	if((player.lastAction == value && player.money >= db.prices[value])
+		|| (player.lastAction == "share" && value.startsWith("share") && cheapestShare !== undefined && player.influence >= cheapestShare.price)
+		|| (player.lastAction == "executive" && value.startsWith("executive"))){
 		player.confirm = true;
 	}
 
 	if(value.startsWith("share")){
 		player.lastAction = "share";
+	}else if(value.startsWith("executive")){
+		player.lastAction = "executive";
 	}else{
 		player.lastAction = value;
 	}
@@ -102,11 +104,15 @@ async function investMenuSubmit(value) {
 
 async function investAction(value){
 	if(value.startsWith("share")){
-		await buyShare(1, value);
+		await hireShareholder(1, value);
+		ui.document.elements.investMenu.closeSubmenu();
+	}else	if(value.startsWith("executive")){
+		await hireExecutive(1, value);
 		ui.document.elements.investMenu.closeSubmenu();
 	}else{
 		switch(value){
 			case "spaceyard": await buySpaceyard(1); break;
+			case "officer": await hireOfficer(1); break;
 		}
 	}
 }
@@ -126,21 +132,6 @@ function playerBarSubmit(value) {
 function companyBarSubmit(value) {
 }
 
-// function menuRedraw(menu){
-// 	document.elements[menu].clear();
-// 	document.elements[menu].pageItemsDef = [];
-// 	document.elements[menu].initChildren();
-// 	document.elements[menu].draw();
-// }
-
-// function menuButtonContent(menu, idx, content){
-// 	document.elements[menu].itemsDef[idx].content = content;
-// }
-
-// function menuButtonDisabled(menu, idx, disabled){
-// 	document.elements[menu].itemsDef[idx].disabled = disabled;
-// }
-
 async function refresh(){
 	await ui.refresh();
 	ui.document.elements.companyBar.on('submit', companyBarSubmit);
@@ -151,28 +142,6 @@ async function refresh(){
 		ui.document.elements.investMenu.on('submit', investMenuSubmit);
 		if(ui.document.elements.confirm) ui.document.elements.confirm.on('submit', confirmSecondInvestSubmit);
 	}
-
-// 	let player = db.players.get(1);
-
-// 	menuButtonContent("playerBar", 0, ` ^[black]${db.main.turn} `);
-// 	menuButtonContent("playerBar", 1, ` ^[black]${db.main.phase} `);
-// 	menuButtonContent("playerBar", 2, ` Money: ^[black]${player.money} `);
-// 	menuButtonContent("playerBar", 3, ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `);
-
-// 	menuRedraw("playerBar");
-
-// 	menuButtonContent("companyBar", 1, ` Money: ^[black]${db.company.money} `);
-
-// 	menuRedraw("companyBar");
-
-// 	if(db.main.phase == "invest"){
-
-		
-
-// 		menuRedraw("investMenu");
-// 	}else{
-// 		document.elements.investMenu.hide();
-// 	}
 }
 
 async function resetGame(){
@@ -184,8 +153,10 @@ async function resetGame(){
 		"spaceyard": 2,
 		"factory": 5,
 		"luxury": 4,
-		"officer": 0,
-		"executive": 0
+		"investor": 0,
+		"officer": 1,
+		"executive": 1,
+		"influence": 2
 	}
 
 	let obj = await db.createObject("prices", prices);
@@ -202,7 +173,8 @@ async function resetGame(){
 	let player1 = {
     "id": 1,
     "money": 10,
-		"lastAction": ""
+		"lastAction": "",
+		"influence": 20
 	}
 
 	let tab = await db.createTable("players");
@@ -213,7 +185,8 @@ async function resetGame(){
 
 	let player2 = {
     "id": 2,
-    "money": 10
+    "money": 10,
+		"influence": 0
 	}
 
 	row = await tab.createRow(player2);
@@ -224,23 +197,23 @@ async function resetGame(){
 		"shares": [
 			{
 				"price": 2,
-				"playerId": 0
+				"personId": 0
 			},
 			{
 				"price": 3,
-				"playerId": 0
+				"personId": 0
 			},
 			{
 				"price": 3,
-				"playerId": 0
+				"personId": 0
 			},
 			{
 				"price": 4,
-				"playerId": 0
+				"personId": 0
 			},
 			{
 				"price": 5,
-				"playerId": 0
+				"personId": 0
 			},
 		]
 	}
@@ -253,7 +226,7 @@ async function resetGame(){
 
 	let office = {
 		"name": "chairman",
-		"playerId": 0,
+		"personId": 0,
 		"hasTreasury": false,
 		"hasExecutives": false
 	}
@@ -263,7 +236,7 @@ async function resetGame(){
 
 	office = {
 		"name": "tradeDirector",
-		"playerId": 0,
+		"personId": 0,
 		"hasTreasury": true,
 		"money": 3,
 		"hasExecutives": false
@@ -274,7 +247,7 @@ async function resetGame(){
 
 	office = {
 		"name": "shippingManager",
-		"playerId": 0,
+		"personId": 0,
 		"hasTreasury": true,
 		"money": 3,
 		"hasExecutives": false
@@ -285,42 +258,10 @@ async function resetGame(){
 
 	office = {
 		"name": "militaryAffairs",
-		"playerId": 0,
+		"personId": 0,
 		"hasTreasury": false,
-		"hasExecutives": false
-	}
-
-	row = await tab.createRow(office);
-	await row.update();
-
-	office = {
-		"name": "systemPresident",
-		"playerId": 0,
-		"hasTreasury": true,
-		"hasExecutives": true,
-		"systemId": 1
-	}
-
-	row = await tab.createRow(office);
-	await row.update();
-
-	office = {
-		"name": "systemPresident",
-		"playerId": 0,
-		"hasTreasury": true,
-		"hasExecutives": true,
-		"systemId": 2
-	}
-
-	row = await tab.createRow(office);
-	await row.update();
-
-	office = {
-		"name": "systemPresident",
-		"playerId": 0,
-		"hasTreasury": true,
-		"hasExecutives": true,
-		"systemId": 3
+		"hasExecutives": false,
+		"ensigns": []
 	}
 
 	row = await tab.createRow(office);
@@ -346,10 +287,22 @@ async function resetGame(){
 		row = await db.systems.createRow(system);
 		await row.update();
 
+		office = {
+			"name": "systemPresident",
+			"personId": 0,
+			"hasTreasury": true,
+			"hasExecutives": true,
+			"systemId": system.id,
+			"money": 3,
+			"executives": []
+		}
+
+		row = await db.offices.createRow(office);
+		await row.update();
+
 		let order = 1;
 		for(let j = 0; j < 3 + system.id; j++){
 			let planet = {
-				"playerId": 0,
 				"name": `${system.id}.${order}`,
 				"systemId": system.id,
 				"order": order++
@@ -364,10 +317,8 @@ async function resetGame(){
 }
 
 async function buySpaceyard(playerId){
-	let res = true;
-
 	let player = db.players.get(playerId);
-	if(player.money < db.prices.spaceyard) return false;
+	if(player.money < db.prices.spaceyard) return undefined;
 
   let yard = {
     "playerId": playerId,
@@ -380,16 +331,63 @@ async function buySpaceyard(playerId){
 
 	player.money -= db.prices.spaceyard;
 
-	return res;
+	return obj;
 }
 
-async function buyShare(playerId, share){
+async function hireOfficer(playerId){
+	let player = db.players.get(playerId);
+
+	if(player.influence < db.prices.officer) return undefined;
+
+	const office = db.offices.find(o => o.name == "militaryAffairs");
+	const p = await hirePerson(playerId, db.prices.officer);
+
+	office.ensigns.push(p.id);
+	await office.update();
+}
+
+async function hireShareholder(playerId, share){
 	let player = db.players.get(playerId);
 
 	let sI = parseInt(share.substring(5));
-	db.company.shares[sI].playerId = 1;
-	db.company.update();
+	if(player.influence < db.company.shares[sI].price) return undefined;
 
-	player.money -= db.company.shares[sI].price;
+	const p = await hirePerson(playerId, db.company.shares[sI].price);
+
+	db.company.shares[sI].personId = p.id;
+	await db.company.update();
+
 	delete player.buyingShare;
+}
+
+async function hireExecutive(playerId, executive){
+	let player = db.players.get(playerId);
+
+	if(player.influence < db.prices.executive) return undefined;
+
+	const systemId = parseInt(executive.substring(9));
+	const office = db.offices.find(o => o.systemId == systemId);
+	const p = await hirePerson(playerId, db.prices.executive);
+
+	office.executives.push(p.id);
+	await office.update();
+
+	delete player.hiringExecutive;
+}
+
+async function hirePerson(playerId, influence){
+	let player = db.players.get(playerId);
+
+  let person = {
+		"name": faker.person.fullName(),
+    "influence": {}
+  }
+	person.influence[playerId] = influence;
+
+	let obj = await db.persons.createRow(person);
+	await obj.update();
+
+	player.influence -= influence;
+
+	return obj;
 }

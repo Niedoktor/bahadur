@@ -1,8 +1,10 @@
 {
     "name": "systemPresident",
-    "playerId": 0,
+    "personId": 0,
     "hasTreasury": true,
     "hasExecutives": true,
     "systemId": 2,
+    "money": 3,
+    "executives": [],
     "id": 6
 }

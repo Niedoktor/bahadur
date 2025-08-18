@@ -1,5 +1,6 @@
 {
     "id": 1,
     "money": 10,
-    "lastAction": ""
+    "lastAction": "",
+    "influence": 20
 }

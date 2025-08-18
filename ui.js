@@ -140,6 +140,11 @@ let ui = {
           markup: true
         },
         {
+          content: ` Influence: ^[black]${player.influence} `,
+          disabled: true,
+          markup: true
+        },
+        {
           content: ` Yards: ^[black]${db.spaceyards.count(o => o.playerId == 1)} `,
           disabled: true,
           markup: true
@@ -148,58 +153,67 @@ let ui = {
     });
 
     if(db.main.phase == "invest"){
-      let cheapestShare = db.company.shares.find(o => o.playerId == 0);
+      let cheapestShare = db.company.shares.find(o => o.personId == 0);
 
       let items = [
       {
-        content: '^[bgWhite]     Choose action     ',
+        content: '^[bgWhite]      Choose action      ',
         disabled: true,
         markup: true
       },
       {
-        content: `  ${player.lastAction == "spaceyard" ? "^+" : ""}Buy Spaceyard ${player.lastAction == "spaceyard" ? "x2" : "  "} ${db.prices.spaceyard}C  `,
+        content: `  ${player.lastAction == "spaceyard" ? "^+" : ""}Buy Spaceyard ${player.lastAction == "spaceyard" ? "x2" : "  "}   ${db.prices.spaceyard}C  `,
         value: 'spaceyard',
         markup: true,
-        disabled: player.money < db.prices.spaceyard || player.confirm || player.buyingShare
+        disabled: player.money < db.prices.spaceyard || player.confirm || player.buyingShare || player.hiringExecutive
       },
       {
-        content: `  ${player.lastAction == "factory" ? "^+" : ""}Buy Factory ${player.lastAction == "factory" ? "x2" : "  "}   ${db.prices.factory}C  `,
+        content: `  ${player.lastAction == "factory" ? "^+" : ""}Buy Factory ${player.lastAction == "factory" ? "x2" : "  "}     ${db.prices.factory}C  `,
         value: 'factory',
         markup: true,
-        disabled: player.money < db.prices.factory || player.confirm || player.buyingShare
+        disabled: player.money < db.prices.factory || player.confirm || player.buyingShare || player.hiringExecutive
       },
       {
-        content: `  ${player.lastAction == "luxury" ? "^+" : ""}Buy Luxury ${player.lastAction == "luxury" ? "x2" : "  "}    ${db.prices.luxury}C  `,
+        content: `  ${player.lastAction == "luxury" ? "^+" : ""}Buy Luxury ${player.lastAction == "luxury" ? "x2" : "  "}      ${db.prices.luxury}C  `,
         value: 'luxury',
         markup: true,
-        disabled: player.money < db.prices.luxury || player.confirm || player.buyingShare
+        disabled: player.money < db.prices.luxury || player.confirm || player.buyingShare || player.hiringExecutive
       },
       {
-        content: `  ${player.lastAction == "share" ? "^+" : ""}Buy Share ${player.lastAction == "share" ? "x2" : "  "}        ►`,
+        content: `  ${player.lastAction == "share" ? "^+" : ""}Hire Investor ${player.lastAction == "share" ? "x2" : "  "}      ►`,
         value: 'share',
         markup: true,
-        disabled: cheapestShare === undefined || player.money < cheapestShare.price || player.confirm,
+        disabled: cheapestShare === undefined || player.influence < cheapestShare.price || player.confirm || player.hiringExecutive,
         items: []
       },
       {
-        content: `  ${player.lastAction == "officer" ? "^+" : ""}Hire Officer ${player.lastAction == "officer" ? "x2" : "  "}  ${db.prices.officer}C  `,
+        content: `  ${player.lastAction == "officer" ? "^+" : ""}Hire Officer ${player.lastAction == "officer" ? "x2" : "  "}    ${db.prices.officer}I  `,
         value: 'officer',
         markup: true,
-        disabled: player.money < db.prices.officer || player.confirm || player.buyingShare
+        disabled: player.confirm || player.buyingShare || player.influence < db.prices.officer || player.hiringExecutive
       },
       {
-        content: `  ${player.lastAction == "executive" ? "^+" : ""}Hire Executive ${player.lastAction == "executive" ? "x2" : "  "}${db.prices.executive}C ►`,
+        content: `  ${player.lastAction == "executive" ? "^+" : ""}Hire Executive ${player.lastAction == "executive" ? "x2" : "  "}  ${db.prices.executive}I ►`,
         value: 'executive',
         markup: true,
-        disabled: player.money < db.prices.executive || player.confirm || player.buyingShare
+        disabled: player.confirm || player.buyingShare || player.influence < db.prices.executive,
+        items: []
       }]
 
       db.company.shares.forEach((share, idx) => {
         items[4].items.push({
-          content: `  ${share.price}C  `,
+          content: `  ${share.price}I  `,
           value: 'share' + idx,
           markup: true,
-          disabled: player.money < share.price || share.playerId != 0 || player.confirm
+          disabled: player.influence < share.price || share.personId != 0 || player.confirm
+        });
+      });
+
+      db.systems.forEach((system, idx) => {
+        items[6].items.push({
+          content: `  ${system.name}  `,
+          value: 'executive' + system.id,
+          markup: true
         });
       });
 
