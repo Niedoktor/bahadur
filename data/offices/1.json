@@ -1,8 +1,7 @@
 {
-    "name": "tradeDirector",
-    "personId": 0,
-    "hasTreasury": true,
-    "money": 3,
+    "name": "chairman",
+    "personId": 13,
+    "hasTreasury": false,
     "hasExecutives": false,
     "id": 2
 }

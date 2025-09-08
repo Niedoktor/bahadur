@@ -1,6 +1,6 @@
 {
-    "name": "chairman",
-    "personId": 0,
+    "name": "chancellor",
+    "personId": 3,
     "hasTreasury": false,
     "hasExecutives": false,
     "id": 1

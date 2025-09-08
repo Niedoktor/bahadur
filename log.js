@@ -1,6 +1,6 @@
 const termkit = require('terminal-kit');
 
-let log = {
+const log = {
   messages: "",
   createTextBox: async (parent) => {
     log.parent = parent;

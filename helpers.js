@@ -4,6 +4,15 @@ const helpers = {
   },
   randomInt: (min, max) => {
     return Math.round(Math.random() * (max - min)) + min;
+  },
+  shuffleArray: (array) => {
+    let count = array.length, randomnumber, temp;
+    while(count){
+      randomnumber = Math.random() * count-- | 0;
+      temp = array[count];
+      array[count] = array[randomnumber];
+      array[randomnumber] = temp
+    }
   }
 }
 

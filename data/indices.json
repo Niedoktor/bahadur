@@ -1,8 +1,10 @@
 {
     "players": 1,
-    "offices": 6,
-    "spaceyards": -1,
+    "offices": 7,
+    "spaceyards": 2,
     "systems": 2,
-    "persons": -1,
+    "persons": 13,
+    "executives": 2,
+    "officers": 2,
     "planets": 14
 }

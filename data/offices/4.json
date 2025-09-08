@@ -1,10 +1,8 @@
 {
-    "name": "systemPresident",
-    "personId": 0,
-    "hasTreasury": true,
-    "hasExecutives": true,
-    "systemId": 1,
-    "money": 3,
-    "executives": [],
+    "name": "militaryAffairs",
+    "personId": 14,
+    "hasTreasury": false,
+    "hasExecutives": false,
+    "ensigns": [],
     "id": 5
 }

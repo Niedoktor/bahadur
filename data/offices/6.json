@@ -1,10 +1,9 @@
 {
-    "name": "systemPresident",
-    "personId": 0,
+    "name": "systemPresident2",
+    "personId": 2,
     "hasTreasury": true,
     "hasExecutives": true,
-    "systemId": 3,
+    "systemId": 2,
     "money": 3,
-    "executives": [],
     "id": 7
 }

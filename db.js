@@ -35,12 +35,18 @@ let db = {
       return db[key].filter(filter).length;
     }
 
-    db[key].update = async () => {
+    db[key].mkdir = async () => {
       try{
         await fs.mkdir(`${rootPath}/${key}`, {} , (err) => {
           if (err) throw err;
         });
       }catch{}
+    }
+
+    db[key].update = async () => {
+      for(let i = 0; i < db[key].length; i++){
+        await db[key][i].update();
+      }
     }
     
     db[key].delete = async () => {
@@ -80,6 +86,8 @@ let db = {
       return db.create(`${rootPath}/${key}/${idx}.json`, key, db[key][idx], idx);
     }
 
+    await db[key].mkdir();
+
     if(messageLog) messageLog(`db.createTable: ${key}`);
 
     return db[key];
@@ -106,7 +114,7 @@ let db = {
       // }catch{}
 
       if(idx !== undefined){
-        await db[key].update();
+        await db[key].mkdir();
       }
 
       await fs.writeFile(filePath, JSON.stringify(data, null, 4), function (err) {

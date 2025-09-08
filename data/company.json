@@ -1,5 +1,7 @@
 {
     "money": 5,
+    "reputation": 4,
+    "debt": 0,
     "shares": [
         {
             "price": 2,
@@ -21,5 +23,6 @@
             "price": 5,
             "personId": 0
         }
-    ]
+    ],
+    "shareholders": []
 }

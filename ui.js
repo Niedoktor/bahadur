@@ -1,9 +1,11 @@
-const db = require('./db');
-const log = require('./log');
 const termkit = require('terminal-kit');
 
-let ui = {
-  init: (term) => {
+let db, log;
+
+const ui = {
+  init: (term, _db, _log) => {
+    db = _db;
+    log = _log;
     ui.term = term;
   },
 

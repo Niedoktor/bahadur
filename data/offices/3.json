@@ -1,8 +1,8 @@
 {
-    "name": "militaryAffairs",
-    "personId": 0,
-    "hasTreasury": false,
+    "name": "shippingManager",
+    "personId": 1,
+    "hasTreasury": true,
+    "money": 3,
     "hasExecutives": false,
-    "ensigns": [],
     "id": 4
 }

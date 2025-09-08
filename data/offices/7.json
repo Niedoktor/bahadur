@@ -1,0 +1,9 @@
+{
+    "name": "systemPresident3",
+    "personId": 11,
+    "hasTreasury": true,
+    "hasExecutives": true,
+    "systemId": 3,
+    "money": 3,
+    "id": 8
+}
