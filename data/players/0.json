@@ -1,6 +1,7 @@
 {
     "id": 1,
-    "money": 0,
+    "money": 9,
     "lastAction": "",
-    "influence": 0
+    "influence": 4,
+    "color": "yellow"
 }

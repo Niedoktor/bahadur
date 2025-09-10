@@ -1,7 +1,8 @@
 {
-    "name": "Dr. Rosalie Rau",
-    "influence": {
-        "1": 2
-    },
+    "name": "Ron Anderson",
+    "influence": [
+        2,
+        0
+    ],
     "id": 4
 }

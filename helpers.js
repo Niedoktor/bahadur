@@ -13,6 +13,9 @@ const helpers = {
       array[count] = array[randomnumber];
       array[randomnumber] = temp
     }
+  },
+  centerText: (text, width) => {
+    return text.padStart((width - text.length) / 2 + text.length, " ")
   }
 }
 

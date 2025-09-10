@@ -1,7 +1,8 @@
 {
-    "name": "Ms. Ethel Kohler",
-    "influence": {
-        "2": 2
-    },
+    "name": "Duane Koelpin",
+    "influence": [
+        0,
+        2
+    ],
     "id": 3
 }

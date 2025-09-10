@@ -1,7 +1,8 @@
 {
-    "name": "Mrs. Becky Schmeler",
-    "influence": {
-        "1": 2
-    },
+    "name": "Diane Turcotte",
+    "influence": [
+        0,
+        1
+    ],
     "id": 13
 }

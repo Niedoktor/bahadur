@@ -1,7 +1,8 @@
 {
-    "name": "Robin Wolff",
-    "influence": {
-        "1": 1
-    },
+    "name": "Wilbert Lueilwitz",
+    "influence": [
+        0,
+        1
+    ],
     "id": 8
 }

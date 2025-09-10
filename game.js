@@ -1,14 +1,9 @@
 const { faker } = require('@faker-js/faker');
 const helpers = require('./helpers');
-
-let db, log;
+const db = require('./db');
+const log = require('./log');
 
 const game = {
-  init: (_db, _log) => {
-    db = _db;
-    log = _log;
-  },
-
   buySpaceyard: async (playerId, systemId, price) => {
     let player = db.players.get(playerId);
 
@@ -91,11 +86,11 @@ const game = {
 
     let person = {
       "name": faker.person.fullName(),
-      "influence": {}
+      "influence": Array(db.players.length).fill(0)
     }
     
     if(influence){
-      person.influence[playerId] = influence;
+      person.influence[playerId - 1] = influence;
       player.influence -= influence;
     }
 

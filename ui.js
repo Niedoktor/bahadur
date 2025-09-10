@@ -1,11 +1,13 @@
 const termkit = require('terminal-kit');
-
-let db, log;
+const helpers = require('./helpers');
+const db = require('./db');
+const log = require('./log');
+const getPerson = require('./getPerson');
+const getOffice = require('./getOffice');
+const getPlayer = require('./getPlayer');
 
 const ui = {
-  init: (term, _db, _log) => {
-    db = _db;
-    log = _log;
+  init: (term) => {
     ui.term = term;
   },
 
@@ -14,18 +16,26 @@ const ui = {
 
     ui.document = ui.term.createDocument({ palette: new termkit.Palette() });
     
-    let player = db.players.get(1);
+    let player = getPlayer(1);
 
     let layout = [
     {
       id: 'companyRow',
+      height: 3,
       columns: [
         { id: 'company' }
       ]
     },
     {
+      id: 'officeRow',
+      height: 10,
+      columns: [
+        { id: 'office1' },
+        { id: 'office2' }
+      ]
+    },
+    {
       id: 'systemRow',
-      height: 9,
       columns: []
     },
     {
@@ -49,8 +59,8 @@ const ui = {
       ]
     }];
 
-    db.systems.forEach((system) => {
-      layout[1].columns.push({ id: 'systemColumn' + system.id });
+    await db.systems.forEach((system) => {
+      layout[2].columns.push({ id: 'systemColumn' + system.id });
     });
 
     new termkit.Layout({
@@ -65,7 +75,7 @@ const ui = {
       }
     });
 
-    db.systems.forEach((system) => {
+    await db.systems.forEach((system) => {
       let w = ui.document.elements["systemColumn" + system.id].outputWidth;
 
       let cmItems = [
@@ -202,7 +212,7 @@ const ui = {
         items: []
       }]
 
-      db.company.shares.forEach((share, idx) => {
+      await db.company.shares.forEach((share, idx) => {
         items[4].items.push({
           content: `  ${share.price}I  `,
           value: 'share' + idx,
@@ -211,7 +221,7 @@ const ui = {
         });
       });
 
-      db.systems.forEach((system, idx) => {
+      await db.systems.forEach((system, idx) => {
         items[6].items.push({
           content: `  ${system.name}  `,
           value: 'executive' + system.id,
@@ -256,6 +266,78 @@ const ui = {
           value: 'reset'
         }
       ]
+    });
+
+    ui.drawOffice(getOffice("chairman"), ui.document.elements.office1, 0, 0);
+    ui.drawOffice(getOffice("tradeDirector"), ui.document.elements.office1, 0, 2);
+    ui.drawOffice(getOffice("shippingManager"), ui.document.elements.office1, 0, 4);
+    ui.drawOffice(getOffice("militaryAffairs"), ui.document.elements.office2, 0, 0);
+    ui.drawOffice(getOffice("chancellor"), ui.document.elements.office1, 0, 6);
+
+    ui.drawEnlisted(ui.document.elements.office2, 0, 2);
+  },
+
+  drawPerson: async (person, parent, x, y) => {
+    const player = person.getMostInfluentialPlayer();
+
+    new termkit.Text({
+      parent: parent,
+      content: person.name,
+      contentHasMarkup: true,
+      contentEllipsis: '…',
+      leftPadding: ' ',
+      x: x,
+      y: y,
+      width: parent.outputWidth - 3 - db.players.length,
+      attr: { bgColor: "black", color: player ? player.color : "white" }
+    });
+
+    new termkit.Text({
+      parent: parent,
+      content: person.influenceString(),
+      contentHasMarkup: true,
+      leftPadding: '|',
+      rightPadding: '| ',
+      y: y,
+      x: x + parent.outputWidth - 3 - db.players.length,
+      width: 3 + db.players.length,
+      attr: { bgColor: "black" }
+    });    
+  },
+
+  drawOffice: async (office, parent, x, y) => {
+    const person = getPerson(office.personId);    
+    const player = person.getMostInfluentialPlayer();
+
+    new termkit.Text({
+      parent: parent,
+      content: office.label + (office.money ? ` | Money: ${office.money}` : ""),
+      contentHasMarkup: true,
+      leftPadding: ' ',
+      x: x,
+      y: y,
+      autoWidth: true,
+      attr: { bgColor: player ? player.color : "white", color: 'black', bold: true }
+    });
+
+    ui.drawPerson(person, parent, x, y + 1);
+  },
+
+  drawEnlisted: async (parent, x, y) => {
+    new termkit.Text({
+      parent: parent,
+      content: helpers.centerText("ENSIGNS", parent.outputWidth),
+      contentHasMarkup: true,
+      x: x,
+      y: y,
+      autoWidth: true,
+      attr: { bgColor: "white", color: 'black', bold: true }
+    });
+
+    const ma = getOffice("militaryAffairs");
+    ma.ensigns.forEach(id => {
+      const person = getPerson(id);
+      ui.drawPerson(person, parent, x, ++y);
     });
   },
 

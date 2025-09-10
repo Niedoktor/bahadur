@@ -1,7 +1,8 @@
 {
-    "name": "Thelma Bernhard",
-    "influence": {
-        "1": 2
-    },
+    "name": "Philip Ullrich",
+    "influence": [
+        1,
+        0
+    ],
     "id": 1
 }

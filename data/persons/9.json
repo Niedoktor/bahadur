@@ -1,7 +1,8 @@
 {
-    "name": "Carrie Little",
-    "influence": {
-        "2": 1
-    },
+    "name": "Dr. Marc Pouros",
+    "influence": [
+        2,
+        0
+    ],
     "id": 10
 }

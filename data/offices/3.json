@@ -1,6 +1,7 @@
 {
     "name": "shippingManager",
-    "personId": 1,
+    "label": "SHIPPING MANAGER",
+    "personId": 3,
     "hasTreasury": true,
     "money": 3,
     "hasExecutives": false,

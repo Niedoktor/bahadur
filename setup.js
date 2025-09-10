@@ -1,15 +1,9 @@
-const { hireExecutive } = require('./game');
 const helpers = require('./helpers');
-
-let db, log, game;
+const db = require('./db');
+const log = require('./log');
+const game = require('./game');
 
 const setup = {
-  init: (_game, _db, _log) => {
-    game = _game;
-    db = _db;
-    log = _log;
-  },
-
   cards: [
     {
       "office": "chancellor"
@@ -88,7 +82,8 @@ const setup = {
       "id": 1,
       "money": 0,
       "lastAction": "",
-      "influence": 0
+      "influence": 0,
+      "color": "yellow"
     }
 
     let tab = await db.createTable("players");
@@ -99,7 +94,8 @@ const setup = {
     let player2 = {
       "id": 2,
       "money": 0,
-      "influence": 0
+      "influence": 0,
+      "color": "cyan"
     }
 
     row = await tab.createRow(player2);
@@ -141,6 +137,7 @@ const setup = {
 
     let office = {
       "name": "chancellor",
+      "label": "CHANCELLOR",
       "personId": 0,
       "hasTreasury": false,
       "hasExecutives": false
@@ -151,6 +148,7 @@ const setup = {
 
     office = {
       "name": "chairman",
+      "label": "CHAIRMAN",
       "personId": 0,
       "hasTreasury": false,
       "hasExecutives": false
@@ -161,6 +159,7 @@ const setup = {
 
     office = {
       "name": "tradeDirector",
+      "label": "TRADE DIRECTOR",
       "personId": 0,
       "hasTreasury": true,
       "money": 3,
@@ -172,6 +171,7 @@ const setup = {
 
     office = {
       "name": "shippingManager",
+      "label": "SHIPPING MANAGER",
       "personId": 0,
       "hasTreasury": true,
       "money": 3,
@@ -183,6 +183,7 @@ const setup = {
 
     office = {
       "name": "militaryAffairs",
+      "label": "MILITARY AFFAIRS",
       "personId": 0,
       "hasTreasury": false,
       "hasExecutives": false,
@@ -209,6 +210,7 @@ const setup = {
 
       office = {
         "name": "systemPresident" + system.id,
+        "label": "System President",
         "personId": 0,
         "hasTreasury": true,
         "hasExecutives": true,
@@ -244,7 +246,7 @@ const setup = {
 
     setup.cards.sort((a, b) => { return b.infSum - a.infSum});
 
-    let infPool = 0;
+    let infPool = 2;
     for(let c = 0; c < setup.cards.length / db.players.length; c++){
       infPool += setup.cards[c].infSum;
     }
@@ -256,7 +258,6 @@ const setup = {
     let pId = 1;
     for(let c = 0; c < setup.cards.length; c++){
       const card = setup.cards[c];
-      //const player = db.players.get(pId);
 
       if(card.office){
         const office = db.offices.find(o => o.name == card.office);
@@ -280,6 +281,11 @@ const setup = {
       if(card.officer){
         const person = await game.hirePerson(pId, db.prices.officer);
         await game.assignOfficer(person.personId, card.officer, true);
+      }
+
+      if(card.money){
+        const player = db.players.get(pId);
+        player.money += card.money;
       }
 
       if(pId < db.players.length)

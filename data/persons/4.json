@@ -1,7 +1,8 @@
 {
-    "name": "Meghan Powlowski",
-    "influence": {
-        "2": 1
-    },
+    "name": "Derek Green",
+    "influence": [
+        0,
+        2
+    ],
     "id": 5
 }

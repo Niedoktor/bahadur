@@ -1,7 +1,8 @@
 {
-    "name": "John Dickens",
-    "influence": {
-        "2": 1
-    },
+    "name": "Randolph Langworth",
+    "influence": [
+        2,
+        0
+    ],
     "id": 6
 }

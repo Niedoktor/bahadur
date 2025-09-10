@@ -41,9 +41,8 @@ let term;
 		});
 
 		term.clear();
-		term.hideCursor(true);
-
 		init();
+		term.hideCursor(true);		
 	});
 })()
 
@@ -52,12 +51,9 @@ async function init(){
 		log.append(msg);
 	});
 
-	game.init(db, log);
-	setup.init(game, db, log);
-
 	if(db.count == 0) await setup.newGame();
 
-	ui.init(term, db, log);
+	ui.init(term);
 	refresh();
 }
 

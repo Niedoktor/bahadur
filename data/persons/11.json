@@ -1,7 +1,8 @@
 {
-    "name": "Dr. Angel Gleason",
-    "influence": {
-        "2": 2
-    },
+    "name": "Mary Lockman-Wunsch",
+    "influence": [
+        2,
+        0
+    ],
     "id": 12
 }

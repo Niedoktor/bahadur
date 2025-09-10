@@ -1,7 +1,8 @@
 {
-    "name": "Aaron Nicolas",
-    "influence": {
-        "1": 2
-    },
+    "name": "Rick Jaskolski",
+    "influence": [
+        0,
+        2
+    ],
     "id": 11
 }
