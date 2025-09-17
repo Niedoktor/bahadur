@@ -1,7 +1,7 @@
 {
     "name": "chairman",
     "label": "CHAIRMAN",
-    "personId": 4,
+    "personId": 12,
     "hasTreasury": false,
     "hasExecutives": false,
     "id": 2

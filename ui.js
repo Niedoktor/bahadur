@@ -5,6 +5,7 @@ const log = require('./log');
 const getPerson = require('./getPerson');
 const getOffice = require('./getOffice');
 const getPlayer = require('./getPlayer');
+const { SystemModule } = require('@faker-js/faker');
 
 const ui = {
   init: (term) => {
@@ -40,7 +41,7 @@ const ui = {
     },
     {
       id: 'playerRow',
-      heightPercent: 30,
+      height: 14,
       columns: [
         { id: 'player' }
       ]
@@ -54,6 +55,7 @@ const ui = {
     },
     {
       id: 'logRow',
+      height: 7,
       columns: [
         { id: 'log' }
       ]
@@ -76,7 +78,26 @@ const ui = {
     });
 
     await db.systems.forEach((system) => {
-      let w = ui.document.elements["systemColumn" + system.id].outputWidth;
+      const element = ui.document.elements["systemColumn" + system.id];
+
+      ui.drawOffice(getOffice("systemPresident" + system.id), element, 0, 7);
+
+      new termkit.Text({
+        parent: element,
+        content: helpers.centerText("EXECUTIVES", element.outputWidth),
+        contentHasMarkup: true,
+        x: 0,
+        y: 9,
+        autoWidth: true,
+        attr: { bgColor: "white", color: 'black', bold: true }
+      });
+
+      let y = 10;
+      db.executives.filter(o => o.systemId == system.id).forEach(exe => {
+        ui.drawPerson(getPerson(exe.personId), element, 0, y++);
+      })
+
+      let w = element.outputWidth;
 
       let cmItems = [
         {
@@ -94,7 +115,7 @@ const ui = {
       });
 
       new termkit.ColumnMenu({
-        parent: ui.document.elements["systemColumn" + system.id],
+        parent: element,
         id: "system" + system.id,
         x: 0,
         y: 0,

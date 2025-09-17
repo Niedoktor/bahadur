@@ -1,7 +1,7 @@
 {
     "name": "systemPresident3",
-    "label": "System President",
-    "personId": 6,
+    "label": "PRESIDENT",
+    "personId": 13,
     "hasTreasury": true,
     "hasExecutives": true,
     "systemId": 3,

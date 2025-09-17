@@ -1,4 +1,5 @@
 const helpers = require('./helpers');
+const { faker } = require('@faker-js/faker');
 const db = require('./db');
 const log = require('./log');
 const game = require('./game');
@@ -202,7 +203,7 @@ const setup = {
 
     for(let i = 0; i < 3; i++){
       let system = {
-        "name": "System " + (i + 1)
+        "name": faker.location.county().replace(" County", "").replace("shire", "").replace("County ", "").replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", "")
       }
 
       row = await db.systems.createRow(system);
@@ -210,7 +211,7 @@ const setup = {
 
       office = {
         "name": "systemPresident" + system.id,
-        "label": "System President",
+        "label": "PRESIDENT",
         "personId": 0,
         "hasTreasury": true,
         "hasExecutives": true,
@@ -224,7 +225,7 @@ const setup = {
       let order = 1;
       for(let j = 0; j < 3 + system.id; j++){
         let planet = {
-          "name": `${system.id}.${order}`,
+          "name": `${order} ${faker.location.city().replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", "")}`,
           "systemId": system.id,
           "order": order++
         }
