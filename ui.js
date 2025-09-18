@@ -79,17 +79,19 @@ const ui = {
 
     await db.systems.forEach((system) => {
       const element = ui.document.elements["systemColumn" + system.id];
+      const w = element.outputWidth;
+      const office = getOffice("systemPresident" + system.id);
 
-      ui.drawOffice(getOffice("systemPresident" + system.id), element, 0, 7);
+      ui.drawOffice(office, element, 0, 7);
 
       new termkit.Text({
         parent: element,
-        content: helpers.centerText("EXECUTIVES", element.outputWidth),
+        content: helpers.centerText("EXECUTIVES", w),
         contentHasMarkup: true,
         x: 0,
         y: 9,
         autoWidth: true,
-        attr: { bgColor: "white", color: 'black', bold: true }
+        attr: { bgColor: "gray", color: 'black', bold: true }
       });
 
       let y = 10;
@@ -97,11 +99,61 @@ const ui = {
         ui.drawPerson(getPerson(exe.personId), element, 0, y++);
       })
 
-      let w = element.outputWidth;
+      new termkit.Text({
+        parent: element,
+        content: helpers.centerText(" GARRISON | Troops: " + office.availableTroops, w),
+        contentHasMarkup: true,
+        x: 0,
+        y: y++,
+        autoWidth: true,
+        attr: { bgColor: "gray", color: 'black', bold: true }
+      });
+
+      db.officers.filter(o => o.systemId == system.id && o.isCommander).forEach(officer => {
+        ui.drawPerson(getPerson(officer.personId), element, 0, y++, "COM. ");
+      })
+
+      db.officers.filter(o => o.systemId == system.id && !o.isCommander).forEach(officer => {
+        ui.drawPerson(getPerson(officer.personId), element, 0, y++);
+      })
+
+      new termkit.Text({
+        parent: element,
+        content: helpers.centerText("MERCENARIES", w),
+        contentHasMarkup: true,
+        x: 0,
+        y: y++,
+        autoWidth: true,
+        attr: { bgColor: "gray", color: 'black', bold: true }
+      });
+
+      system.merc.forEach(m => {
+        new termkit.Text({
+          parent: element,
+          content: m.name,
+          leftPadding: " ",
+          contentHasMarkup: true,
+          x: 0,
+          y: y,
+          width: w - 7,
+          attr: { bgColor: "black", color: 'white' }
+        });
+
+        new termkit.Text({
+          parent: element,
+          content: `${m.strength} / ${m.price}C`,
+          rightPadding: " ",
+          contentHasMarkup: true,
+          x: w - 7,
+          y: y++,
+          width: 7,
+          attr: { bgColor: "black", color: 'white' }
+        });
+      });
 
       let cmItems = [
         {
-          content: `^[bgWhite] ${system.name}`.padEnd(w + 10, ' '),
+          content: '^[bgWhite]' + helpers.centerText(system.name, w),
           disabled: true,
           markup: true
         }
@@ -298,12 +350,12 @@ const ui = {
     ui.drawEnlisted(ui.document.elements.office2, 0, 2);
   },
 
-  drawPerson: async (person, parent, x, y) => {
+  drawPerson: async (person, parent, x, y, prefix) => {
     const player = person.getMostInfluentialPlayer();
 
     new termkit.Text({
       parent: parent,
-      content: person.name,
+      content: (prefix ? prefix : "") + person.name,
       contentHasMarkup: true,
       contentEllipsis: '…',
       leftPadding: ' ',
@@ -352,7 +404,7 @@ const ui = {
       x: x,
       y: y,
       autoWidth: true,
-      attr: { bgColor: "white", color: 'black', bold: true }
+      attr: { bgColor: "gray", color: 'black', bold: true }
     });
 
     const ma = getOffice("militaryAffairs");

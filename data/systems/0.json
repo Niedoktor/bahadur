@@ -1,4 +1,16 @@
 {
-    "name": "York",
+    "name": "Scott",
+    "merc": [
+        {
+            "name": "merc1",
+            "strength": 2,
+            "price": 3
+        },
+        {
+            "name": "merc2",
+            "strength": 3,
+            "price": 5
+        }
+    ],
     "id": 1
 }

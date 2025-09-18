@@ -1,10 +1,11 @@
 {
     "name": "systemPresident1",
     "label": "PRESIDENT",
-    "personId": 14,
+    "personId": 8,
     "hasTreasury": true,
     "hasExecutives": true,
     "systemId": 1,
     "money": 3,
+    "availableTroops": 2,
     "id": 6
 }

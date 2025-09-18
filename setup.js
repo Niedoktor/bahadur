@@ -51,6 +51,44 @@ const setup = {
       "spaceyard": 2,
       "money": 1
     }],
+
+  mercenaries: [
+    [{
+      "name": "merc1",
+      "strength": 2,
+      "price": 3
+    },
+    {
+      "name": "merc2",
+      "strength": 3,
+      "price": 5
+    }],
+    [{
+      "name": "merc3",
+      "strength": 2,
+      "price": 3
+    },
+    {
+      "name": "merc4",
+      "strength": 2,
+      "price": 4
+    }],
+    [{
+      "name": "merc5",
+      "strength": 1,
+      "price": 2
+    },
+    {
+      "name": "merc6",
+      "strength": 2,
+      "price": 4
+    },
+    {
+      "name": "merc7",
+      "strength": 2,
+      "price": 4
+    }],
+  ],
   
   newGame: async () => {
     log.append("--- RESET BEGIN!---");
@@ -194,16 +232,17 @@ const setup = {
     row = await tab.createRow(office);
     await row.update();
 
-    tab = await db.createTable("spaceyards");
-    tab = await db.createTable("systems");
-    tab = await db.createTable("persons");
-    tab = await db.createTable("executives");
-    tab = await db.createTable("officers");
-    tab = await db.createTable("planets");
+    await db.createTable("spaceyards");
+    await db.createTable("systems");
+    await db.createTable("persons");
+    await db.createTable("executives");
+    await db.createTable("officers");
+    await db.createTable("planets");
 
     for(let i = 0; i < 3; i++){
       let system = {
-        "name": faker.location.county().replace(" County", "").replace("shire", "").replace("County ", "").replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", "")
+        "name": faker.location.county().replace(" County", "").replace("shire", "").replace("County ", "").replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", ""),
+        "merc": setup.mercenaries[i]
       }
 
       row = await db.systems.createRow(system);
@@ -216,7 +255,8 @@ const setup = {
         "hasTreasury": true,
         "hasExecutives": true,
         "systemId": system.id,
-        "money": 3
+        "money": 3,
+        "availableTroops": 2
       }
 
       row = await db.offices.createRow(office);
@@ -281,7 +321,7 @@ const setup = {
 
       if(card.officer){
         const person = await game.hirePerson(pId, db.prices.officer);
-        await game.assignOfficer(person.personId, card.officer, true);
+        await game.assignOfficer(person.id, card.officer, true);
       }
 
       if(card.money){

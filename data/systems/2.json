@@ -1,4 +1,21 @@
 {
-    "name": "Washington",
+    "name": "Oxford",
+    "merc": [
+        {
+            "name": "merc5",
+            "strength": 1,
+            "price": 2
+        },
+        {
+            "name": "merc6",
+            "strength": 2,
+            "price": 4
+        },
+        {
+            "name": "merc7",
+            "strength": 2,
+            "price": 4
+        }
+    ],
     "id": 3
 }

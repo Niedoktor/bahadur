@@ -1,7 +1,7 @@
 {
     "name": "chancellor",
     "label": "CHANCELLOR",
-    "personId": 6,
+    "personId": 12,
     "hasTreasury": false,
     "hasExecutives": false,
     "id": 1

@@ -1,4 +1,16 @@
 {
-    "name": "Sussex",
+    "name": "Stafford",
+    "merc": [
+        {
+            "name": "merc3",
+            "strength": 2,
+            "price": 3
+        },
+        {
+            "name": "merc4",
+            "strength": 2,
+            "price": 4
+        }
+    ],
     "id": 2
 }

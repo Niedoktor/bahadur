@@ -15,7 +15,7 @@ const helpers = {
     }
   },
   centerText: (text, width) => {
-    return text.padStart((width - text.length) / 2 + text.length, " ")
+    return text.padStart((width - text.length) / 2 + text.length, " ").padEnd(width, " ")
   }
 }
 
