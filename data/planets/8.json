@@ -1,6 +1,9 @@
 {
-    "name": "5 Adrianna",
+    "name": "Port Adan",
     "systemId": 2,
     "order": 5,
+    "status": "open",
+    "localPower": 3,
+    "tradeValue": 3,
     "id": 9
 }

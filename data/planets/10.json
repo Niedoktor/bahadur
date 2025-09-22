@@ -1,6 +1,9 @@
 {
-    "name": "2 Quigleyshire",
+    "name": "New Tod",
     "systemId": 3,
     "order": 2,
+    "status": "close",
+    "localPower": 0,
+    "tradeValue": 7,
     "id": 11
 }

@@ -1,6 +1,9 @@
 {
-    "name": "1 New Jeanette",
+    "name": "Turlock",
     "systemId": 3,
     "order": 1,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 5,
     "id": 10
 }

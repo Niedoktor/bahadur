@@ -1,6 +1,9 @@
 {
-    "name": "1 Hattiesburg",
+    "name": "Wichita Falls",
     "systemId": 1,
     "order": 1,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 4,
     "id": 1
 }

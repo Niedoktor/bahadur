@@ -89,7 +89,12 @@ const setup = {
       "price": 4
     }],
   ],
-  
+
+  initialClosedPlanets: 0.4,
+  maxTradeValue: 7,
+  minTradeValue: 2,
+  maxLocalPower: 3,
+
   newGame: async () => {
     log.append("--- RESET BEGIN!---");
 
@@ -263,11 +268,15 @@ const setup = {
       await row.update();
 
       let order = 1;
+      let closed = Math.round(setup.initialClosedPlanets * (3 + system.id));
       for(let j = 0; j < 3 + system.id; j++){
         let planet = {
-          "name": `${order} ${faker.location.city().replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", "")}`,
+          "name": faker.location.city().replace("West ", "").replace("East ", "").replace("South ", "").replace("North ", ""),
           "systemId": system.id,
-          "order": order++
+          "order": order++,
+          "status": Math.random() < setup.initialClosedPlanets && closed-- > 0 ? "close" : "open",
+          "localPower": helpers.randomInt(0, setup.maxLocalPower),
+          "tradeValue": helpers.randomInt(setup.minTradeValue, setup.maxTradeValue)
         }
 
         row = await db.planets.createRow(planet);
@@ -282,7 +291,7 @@ const setup = {
       if(card.office) card.infSum += db.prices.office;
       if(card.executive) card.infSum += db.prices.executive;
       if(card.officer) card.infSum += db.prices.officer;
-      if(card.shareholder) card.infSum += db.company.shares[0].price;
+      if(card.hasOwnProperty("shareholder")) card.infSum += db.company.shares[0].price;
     }
 
     setup.cards.sort((a, b) => { return b.infSum - a.infSum});
@@ -311,8 +320,9 @@ const setup = {
         await game.buySpaceyard(pId, card.spaceyard);
       }
 
-      if(card.shareholder){
-        await game.hireShareholder(pId, card.shareholder, db.company.shares[card.shareholder].price);
+      if(card.hasOwnProperty("shareholder")){
+        const person = await game.hirePerson(pId, db.company.shares[card.shareholder].price);
+        await game.assignShareholder(person.id);
       }
 
       if(card.executive){

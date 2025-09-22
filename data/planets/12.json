@@ -1,6 +1,9 @@
 {
-    "name": "4 Jacyntheport",
+    "name": "Spencerview",
     "systemId": 3,
     "order": 4,
+    "status": "open",
+    "localPower": 1,
+    "tradeValue": 4,
     "id": 13
 }

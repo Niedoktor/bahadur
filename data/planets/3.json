@@ -1,6 +1,9 @@
 {
-    "name": "4 Jessyca",
+    "name": "Fort Johnathan",
     "systemId": 1,
     "order": 4,
+    "status": "close",
+    "localPower": 1,
+    "tradeValue": 4,
     "id": 4
 }

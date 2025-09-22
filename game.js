@@ -77,7 +77,7 @@ const game = {
   },
 
   assignShareholder: async (personId) => {
-    db.company.push(personId);
+    db.company.shareholders.push(personId);
     await db.company.update();
   },
 

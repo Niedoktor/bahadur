@@ -1,6 +1,9 @@
 {
-    "name": "3 Port Eladio",
+    "name": "Margate",
     "systemId": 3,
     "order": 3,
+    "status": "close",
+    "localPower": 2,
+    "tradeValue": 5,
     "id": 12
 }

@@ -133,6 +133,20 @@ function playerBarSubmit(value) {
 }
 
 function companyBarSubmit(value) {
+	if(value == "companyMode"){
+		if(ui.companyMode == "offices")
+			ui.companyMode = "shareholders";
+		else
+			ui.companyMode = "offices";
+		refresh();
+	}
+	if(value == "systemMode"){
+		if(ui.systemMode == "office")
+			ui.systemMode = "ships";
+		else
+			ui.systemMode = "office";
+		refresh();
+	}
 }
 
 async function refresh(){

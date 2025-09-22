@@ -1,6 +1,9 @@
 {
-    "name": "3 Tamarastead",
+    "name": "Lelaberg",
     "systemId": 1,
     "order": 3,
+    "status": "open",
+    "localPower": 1,
+    "tradeValue": 5,
     "id": 3
 }

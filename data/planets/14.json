@@ -1,6 +1,9 @@
 {
-    "name": "6 Volkmanchester",
+    "name": "Bristol",
     "systemId": 3,
     "order": 6,
+    "status": "open",
+    "localPower": 1,
+    "tradeValue": 4,
     "id": 15
 }

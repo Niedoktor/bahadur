@@ -1,6 +1,9 @@
 {
-    "name": "2 Colbystead",
+    "name": "Dale City",
     "systemId": 1,
     "order": 2,
+    "status": "open",
+    "localPower": 0,
+    "tradeValue": 3,
     "id": 2
 }

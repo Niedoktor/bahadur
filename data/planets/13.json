@@ -1,6 +1,9 @@
 {
-    "name": "5 Lesterchester",
+    "name": "Fort Jaron",
     "systemId": 3,
     "order": 5,
+    "status": "open",
+    "localPower": 0,
+    "tradeValue": 4,
     "id": 14
 }
