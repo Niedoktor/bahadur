@@ -1,8 +1,9 @@
 {
-    "name": "Dan Gottlieb",
+    "name": "Valerie Denesik",
     "influence": [
-        1,
-        0
+        0,
+        2
     ],
+    "influencedBy": 2,
     "id": 12
 }

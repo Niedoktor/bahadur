@@ -1,9 +1,9 @@
 {
-    "name": "Wichita Falls",
+    "name": "Shyanneboro",
     "systemId": 1,
     "order": 1,
     "status": "open",
-    "localPower": 2,
+    "localPower": 3,
     "tradeValue": 4,
     "id": 1
 }

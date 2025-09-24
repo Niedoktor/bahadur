@@ -1,6 +1,7 @@
 {
-    "playerId": 2,
-    "spaceshipName": "Crystallize",
-    "systemId": 3,
+    "playerId": 1,
+    "spaceshipName": "Almighty Embalm",
+    "spaceshipIntegrity": 100,
+    "systemId": 1,
     "id": 2
 }

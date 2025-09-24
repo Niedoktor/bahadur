@@ -1,9 +1,9 @@
 {
-    "name": "Jake",
+    "name": "Lake Payton",
     "systemId": 2,
     "order": 4,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 3,
+    "localPower": 0,
+    "tradeValue": 5,
     "id": 8
 }

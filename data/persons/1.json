@@ -1,8 +1,9 @@
 {
-    "name": "Leonard Rippin",
+    "name": "Jessie Maggio",
     "influence": [
         2,
         0
     ],
+    "influencedBy": 1,
     "id": 2
 }

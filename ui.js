@@ -5,6 +5,7 @@ const log = require('./log');
 const getPerson = require('./getPerson');
 const getOffice = require('./getOffice');
 const getPlayer = require('./getPlayer');
+const getSpaceyard = require('./getSpaceyard');
 
 const ui = {
   init: (term) => {
@@ -78,110 +79,7 @@ const ui = {
       }
     });
 
-    await db.systems.forEach((system) => {
-      const element = ui.document.elements["systemColumn" + system.id];
-      const w = element.outputWidth;
-      const office = getOffice("systemPresident" + system.id);
-
-      if(ui.systemMode == "office"){
-        ui.drawOffice(office, element, 0, 7);
-
-        new termkit.Text({
-          parent: element,
-          content: helpers.centerText("EXECUTIVES", w),
-          contentHasMarkup: true,
-          x: 0,
-          y: 9,
-          autoWidth: true,
-          attr: { bgColor: "gray", color: 'black', bold: true }
-        });
-
-        let y = 10;
-        db.executives.filter(o => o.systemId == system.id).forEach(exe => {
-          ui.drawPerson(getPerson(exe.personId), element, 0, y++);
-        })
-
-        new termkit.Text({
-          parent: element,
-          content: helpers.centerText(" GARRISON | Troops: " + office.availableTroops, w),
-          contentHasMarkup: true,
-          x: 0,
-          y: y++,
-          autoWidth: true,
-          attr: { bgColor: "gray", color: 'black', bold: true }
-        });
-
-        db.officers.filter(o => o.systemId == system.id && o.isCommander).forEach(officer => {
-          ui.drawPerson(getPerson(officer.personId), element, 0, y++, "COM. ");
-        })
-
-        db.officers.filter(o => o.systemId == system.id && !o.isCommander).forEach(officer => {
-          ui.drawPerson(getPerson(officer.personId), element, 0, y++);
-        })
-
-        new termkit.Text({
-          parent: element,
-          content: helpers.centerText("MERCENARIES", w),
-          contentHasMarkup: true,
-          x: 0,
-          y: y++,
-          autoWidth: true,
-          attr: { bgColor: "gray", color: 'black', bold: true }
-        });
-
-        system.merc.forEach(m => {
-          new termkit.Text({
-            parent: element,
-            content: m.name,
-            leftPadding: " ",
-            contentHasMarkup: true,
-            x: 0,
-            y: y,
-            width: w - 5,
-            attr: { bgColor: "black", color: 'white' }
-          });
-
-          new termkit.Text({
-            parent: element,
-            content: `${m.strength}/${m.price}C`,
-            rightPadding: " ",
-            contentHasMarkup: true,
-            x: w - 5,
-            y: y++,
-            width: 5,
-            attr: { bgColor: "black", color: 'white' }
-          });
-        });
-      }else{
-        ui.drawShips(element, system.id, 0, 7);
-      }
-
-      let cmItems = [
-        {
-          content: '^[bgWhite]' + helpers.centerText(system.name, w),
-          disabled: true,
-          markup: true
-        }
-      ]
-
-      db.planets.filter(o => o.systemId == system.id).forEach((p) => {
-        cmItems.push({
-          content: ` ${p.order} ${p.name.substring(0, w - 10)}${p.name.length > w - 10 ? String.fromCharCode(0x2026) : ""} `.padEnd(w - 5, ' ') + `${p.localPower}/${p.status == "close" ? "^[red]" : "^[green]"}${p.tradeValue}C`,
-          markup: true
-        });
-      });
-
-      new termkit.ColumnMenu({
-        parent: element,
-        id: "system" + system.id,
-        x: 0,
-        y: 0,
-        autoWidth: true,
-        buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
-        buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
-        items: cmItems
-      });
-    });
+    await ui.drawSystems();
 
     await log.createTextBox(ui.document.elements.log);
 
@@ -233,6 +131,8 @@ const ui = {
       y: 0,
       separator: '|',
       justify: false,
+      backgroundAttr: { bgColor: player.color },
+      buttonDisabledAttr: { bgColor: player.color },
       items: [
         {
           content: ` ^[black]${db.main.turn} `,
@@ -381,8 +281,115 @@ const ui = {
     }
   },
 
+  drawSystems: async () => {
+    await db.systems.forEach((system) => {
+      const element = ui.document.elements["systemColumn" + system.id];
+      const w = element.outputWidth;
+      const office = getOffice("systemPresident" + system.id);
+
+      if(ui.systemMode == "office"){
+        ui.drawOffice(office, element, 0, 7);
+
+        new termkit.Text({
+          parent: element,
+          content: helpers.centerText("EXECUTIVES", w),
+          contentHasMarkup: true,
+          x: 0,
+          y: 9,
+          autoWidth: true,
+          attr: { bgColor: "gray", color: 'black', bold: true }
+        });
+
+        let y = 10;
+        db.executives.filter(o => o.systemId == system.id).forEach(exe => {
+          ui.drawPerson(getPerson(exe.personId), element, 0, y++);
+        })
+
+        new termkit.Text({
+          parent: element,
+          content: helpers.centerText(" GARRISON | Troops: " + office.availableTroops, w),
+          contentHasMarkup: true,
+          x: 0,
+          y: y++,
+          autoWidth: true,
+          attr: { bgColor: "gray", color: 'black', bold: true }
+        });
+
+        db.officers.filter(o => o.systemId == system.id && o.isCommander).forEach(officer => {
+          ui.drawPerson(getPerson(officer.personId), element, 0, y++, "COM. ");
+        })
+
+        db.officers.filter(o => o.systemId == system.id && !o.isCommander).forEach(officer => {
+          ui.drawPerson(getPerson(officer.personId), element, 0, y++);
+        })
+
+        new termkit.Text({
+          parent: element,
+          content: helpers.centerText("MERCENARIES", w),
+          contentHasMarkup: true,
+          x: 0,
+          y: y++,
+          autoWidth: true,
+          attr: { bgColor: "gray", color: 'black', bold: true }
+        });
+
+        system.merc.forEach(m => {
+          new termkit.Text({
+            parent: element,
+            content: m.name,
+            leftPadding: " ",
+            contentHasMarkup: true,
+            x: 0,
+            y: y,
+            width: w - 5,
+            attr: { bgColor: "black", color: 'white' }
+          });
+
+          new termkit.Text({
+            parent: element,
+            content: `${m.strength}|${m.price}C`,
+            rightPadding: " ",
+            contentHasMarkup: true,
+            x: w - 5,
+            y: y++,
+            width: 5,
+            attr: { bgColor: "black", color: 'white' }
+          });
+        });
+      }else{
+        ui.drawShips(element, system.id, 0, 7);
+      }
+
+      let cmItems = [
+        {
+          content: '^[bgWhite]' + helpers.centerText(system.name, w),
+          disabled: true,
+          markup: true
+        }
+      ]
+
+      db.planets.filter(o => o.systemId == system.id).forEach((p) => {
+        cmItems.push({
+          content: ` ${p.order} ${p.name.substring(0, w - 10)}${p.name.length > w - 10 ? String.fromCharCode(0x2026) : ""} `.padEnd(w - 5, ' ') + `${p.localPower}|${p.status == "close" ? "^[red]" : "^[green]"}${p.tradeValue}C`,
+          markup: true
+        });
+      });
+
+      new termkit.ColumnMenu({
+        parent: element,
+        id: "system" + system.id,
+        x: 0,
+        y: 0,
+        autoWidth: true,
+        buttonFocusAttr: { bgColor: 'green', color: 'blue', bold: true },
+        buttonBlurAttr: { bgColor: 'black', color: 'white', bold: false },
+        items: cmItems
+      });
+    });
+  },
+
   drawPerson: async (person, parent, x, y, prefix) => {
-    const player = person.getMostInfluentialPlayer();
+    const player = getPlayer(person.influencedBy);
 
     new termkit.Text({
       parent: parent,
@@ -410,7 +417,7 @@ const ui = {
   },
 
   drawShip: async (spaceyard, parent, x, y, prefix) => {
-    const player = db.players.get(spaceyard.playerId);
+    const player = getPlayer(spaceyard.playerId);
 
     new termkit.Text({
       parent: parent,
@@ -420,26 +427,25 @@ const ui = {
       leftPadding: ' ',
       x: x,
       y: y,
-      width: parent.outputWidth - 3,
+      width: parent.outputWidth - 6,
       attr: { bgColor: "black", color: player ? player.color : "white" }
     });
 
-    // new termkit.Text({
-    //   parent: parent,
-    //   content: person.influenceString(),
-    //   contentHasMarkup: true,
-    //   leftPadding: '|',
-    //   rightPadding: '| ',
-    //   y: y,
-    //   x: x + parent.outputWidth - 3 - db.players.length,
-    //   width: 3 + db.players.length,
-    //   attr: { bgColor: "black" }
-    // });    
+    new termkit.Text({
+      parent: parent,
+      content: spaceyard.spaceshipIntegrity.toString().padEnd(3, " ") + "%",
+      contentHasMarkup: true,
+      rightPadding: ' ',
+      y: y,
+      x: x + parent.outputWidth - 5,
+      width: 5,
+      attr: { bgColor: "black", color: player ? player.color : "white" }
+    });    
   },
 
   drawOffice: async (office, parent, x, y) => {
     const person = getPerson(office.personId);    
-    const player = person.getMostInfluentialPlayer();
+    const player = getPlayer(person.influencedBy);
 
     new termkit.Text({
       parent: parent,

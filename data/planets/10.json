@@ -1,9 +1,9 @@
 {
-    "name": "New Tod",
+    "name": "Keeleyshire",
     "systemId": 3,
     "order": 2,
-    "status": "close",
-    "localPower": 0,
-    "tradeValue": 7,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 6,
     "id": 11
 }

@@ -1,9 +1,9 @@
 {
-    "name": "Spencerview",
+    "name": "Trantowfurt",
     "systemId": 3,
     "order": 4,
-    "status": "open",
-    "localPower": 1,
-    "tradeValue": 4,
+    "status": "close",
+    "localPower": 2,
+    "tradeValue": 6,
     "id": 13
 }

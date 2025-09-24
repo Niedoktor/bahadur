@@ -1,9 +1,9 @@
 {
-    "name": "Fort Johnathan",
+    "name": "Julianneland",
     "systemId": 1,
     "order": 4,
-    "status": "close",
-    "localPower": 1,
+    "status": "open",
+    "localPower": 2,
     "tradeValue": 4,
     "id": 4
 }

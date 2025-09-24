@@ -1,8 +1,9 @@
 {
-    "name": "Frances Schaefer",
+    "name": "Raquel Keebler",
     "influence": [
-        2,
-        0
+        0,
+        2
     ],
+    "influencedBy": 2,
     "id": 15
 }

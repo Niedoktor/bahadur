@@ -1,8 +1,9 @@
 {
-    "name": "Ellen Nikolaus IV",
+    "name": "Herbert Ruecker",
     "influence": [
-        2,
-        0
+        0,
+        2
     ],
+    "influencedBy": 2,
     "id": 5
 }

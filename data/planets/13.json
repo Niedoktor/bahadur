@@ -1,9 +1,9 @@
 {
-    "name": "Fort Jaron",
+    "name": "Wiegandport",
     "systemId": 3,
     "order": 5,
     "status": "open",
-    "localPower": 0,
+    "localPower": 3,
     "tradeValue": 4,
     "id": 14
 }

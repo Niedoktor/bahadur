@@ -1,8 +1,9 @@
 {
-    "name": "Eula Windler",
+    "name": "Emily Koelpin",
     "influence": [
         1,
         0
     ],
+    "influencedBy": 1,
     "id": 13
 }

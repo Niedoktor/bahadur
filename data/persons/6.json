@@ -1,8 +1,9 @@
 {
-    "name": "Miguel Harber",
+    "name": "Elizabeth Ritchie-Weber",
     "influence": [
-        0,
-        1
+        1,
+        0
     ],
+    "influencedBy": 1,
     "id": 7
 }

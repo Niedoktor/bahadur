@@ -1,9 +1,9 @@
 {
-    "name": "Lee's Summit",
+    "name": "Vilmatown",
     "systemId": 2,
     "order": 1,
     "status": "open",
     "localPower": 2,
-    "tradeValue": 2,
+    "tradeValue": 6,
     "id": 5
 }

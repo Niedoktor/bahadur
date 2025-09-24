@@ -1,8 +1,9 @@
 {
-    "name": "Dr. Opal Murphy",
+    "name": "Candice Abshire",
     "influence": [
         0,
         2
     ],
+    "influencedBy": 2,
     "id": 11
 }

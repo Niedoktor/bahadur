@@ -14,7 +14,8 @@ const game = {
 
     let yard = {
       "playerId": playerId,
-      "spaceshipName": helpers.toCapitalCase(faker.word.words({ count: { min: 1, max: 2 }})),		
+      "spaceshipName": helpers.toCapitalCase(faker.word.words({ count: { min: 1, max: 2 }})),
+      "spaceshipIntegrity": 100,
       "systemId": systemId == undefined ? 0 : systemId
     }
 
@@ -86,12 +87,13 @@ const game = {
 
     let person = {
       "name": faker.person.fullName(),
-      "influence": Array(db.players.length).fill(0)
+      "influence": Array(db.players.length).fill(0),
     }
     
     if(influence){
       person.influence[playerId - 1] = influence;
       player.influence -= influence;
+      person.influencedBy = playerId;
     }
 
     let obj = await db.persons.createRow(person);

@@ -1,9 +1,9 @@
 {
-    "name": "Bristol",
+    "name": "Wilmington",
     "systemId": 3,
     "order": 6,
-    "status": "open",
-    "localPower": 1,
-    "tradeValue": 4,
+    "status": "close",
+    "localPower": 0,
+    "tradeValue": 2,
     "id": 15
 }

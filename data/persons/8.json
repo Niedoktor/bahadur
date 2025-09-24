@@ -1,8 +1,9 @@
 {
-    "name": "Henry Mayert",
+    "name": "Marcella Klein",
     "influence": [
-        2,
-        0
+        0,
+        2
     ],
+    "influencedBy": 2,
     "id": 9
 }

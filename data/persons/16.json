@@ -1,8 +1,9 @@
 {
-    "name": "Shelia Powlowski",
+    "name": "Dr. Sylvester Blick",
     "influence": [
         2,
         0
     ],
+    "influencedBy": 1,
     "id": 17
 }

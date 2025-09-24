@@ -1,8 +1,9 @@
 {
-    "name": "Regina Purdy MD",
+    "name": "Mildred Lang",
     "influence": [
         0,
-        1
+        2
     ],
+    "influencedBy": 2,
     "id": 3
 }

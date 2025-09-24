@@ -1,8 +1,9 @@
 {
-    "name": "Miss Rachael Kuvalis",
+    "name": "Hugo Hand",
     "influence": [
-        0,
-        2
+        2,
+        0
     ],
+    "influencedBy": 1,
     "id": 10
 }

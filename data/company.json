@@ -5,11 +5,11 @@
     "shares": [
         {
             "price": 2,
-            "personId": 3
+            "personId": 0
         },
         {
             "price": 3,
-            "personId": 4
+            "personId": 0
         },
         {
             "price": 3,
@@ -26,9 +26,9 @@
     ],
     "shareholders": [
         2,
-        6,
-        11,
-        16,
-        19
+        5,
+        9,
+        12,
+        17
     ]
 }

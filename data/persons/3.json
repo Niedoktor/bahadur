@@ -1,8 +1,9 @@
 {
-    "name": "Olive Schoen",
+    "name": "Eleanor Konopelski",
     "influence": [
         0,
-        1
+        2
     ],
+    "influencedBy": 2,
     "id": 4
 }

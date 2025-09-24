@@ -1,8 +1,9 @@
 {
-    "name": "Josephine Bernier",
+    "name": "Trevor Wehner",
     "influence": [
         0,
-        2
+        1
     ],
+    "influencedBy": 2,
     "id": 19
 }

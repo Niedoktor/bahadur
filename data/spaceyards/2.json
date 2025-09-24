@@ -1,6 +1,7 @@
 {
     "playerId": 2,
-    "spaceshipName": "Furthermore Aw",
-    "systemId": 1,
+    "spaceshipName": "Mundane Or",
+    "spaceshipIntegrity": 100,
+    "systemId": 2,
     "id": 3
 }

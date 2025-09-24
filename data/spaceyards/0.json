@@ -1,6 +1,7 @@
 {
-    "playerId": 1,
-    "spaceshipName": "Tame Blond",
-    "systemId": 2,
+    "playerId": 2,
+    "spaceshipName": "Cop-out Consequently",
+    "spaceshipIntegrity": 100,
+    "systemId": 3,
     "id": 1
 }

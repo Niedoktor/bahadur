@@ -1,8 +1,9 @@
 {
-    "name": "Andy Beer",
+    "name": "Bernard Wintheiser",
     "influence": [
         0,
-        2
+        1
     ],
+    "influencedBy": 2,
     "id": 18
 }

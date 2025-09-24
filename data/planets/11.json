@@ -1,9 +1,9 @@
 {
-    "name": "Margate",
+    "name": "Port Gunnartown",
     "systemId": 3,
     "order": 3,
-    "status": "close",
-    "localPower": 2,
-    "tradeValue": 5,
+    "status": "open",
+    "localPower": 1,
+    "tradeValue": 6,
     "id": 12
 }

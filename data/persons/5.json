@@ -1,8 +1,9 @@
 {
-    "name": "Hope Satterfield",
+    "name": "Scott Yundt MD",
     "influence": [
-        2,
+        1,
         0
     ],
+    "influencedBy": 1,
     "id": 6
 }

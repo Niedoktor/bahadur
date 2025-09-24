@@ -1,8 +1,9 @@
 {
-    "name": "Debbie Terry",
+    "name": "Mr. Floyd Armstrong",
     "influence": [
-        0,
-        2
+        1,
+        0
     ],
+    "influencedBy": 1,
     "id": 14
 }
