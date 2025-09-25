@@ -16,6 +16,9 @@ const helpers = {
   },
   centerText: (text, width) => {
     return text.padStart((width - text.length) / 2 + text.length, " ").padEnd(width, " ")
+  },
+  clippedText: (text, width) => {
+    return `${text.substring(0, width - 2)}${text.length > width - 2 ? String.fromCharCode(0x2026) : ""} `.padEnd(width, ' ')
   }
 }
 

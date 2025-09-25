@@ -316,7 +316,7 @@ const ui = {
         });
 
         db.officers.filter(o => o.systemId == system.id && o.isCommander).forEach(officer => {
-          ui.drawPerson(getPerson(officer.personId), element, 0, y++, "COM. ");
+          ui.drawPerson(getPerson(officer.personId), element, 0, y++, "COM.");
         })
 
         db.officers.filter(o => o.systemId == system.id && !o.isCommander).forEach(officer => {
@@ -390,57 +390,38 @@ const ui = {
 
   drawPerson: async (person, parent, x, y, prefix) => {
     const player = getPlayer(person.influencedBy);
+    const w = parent.outputWidth;
+    const name = `${(prefix ? " " + prefix : "")} ${person.name}`;
 
-    new termkit.Text({
+    new termkit.Button({
       parent: parent,
-      content: (prefix ? prefix : "") + person.name,
+      content: helpers.clippedText(name, w - 3 - db.players.length) + `|${person.influenceString()}|`,
       contentHasMarkup: true,
-      contentEllipsis: '…',
-      leftPadding: ' ',
       x: x,
       y: y,
-      width: parent.outputWidth - 3 - db.players.length,
-      attr: { bgColor: "black", color: player ? player.color : "white" }
+      autoWidth: true,
+      blurAttr: { bgColor: "black", color: player ? player.color : "white" },
+      focusAttr: { bgColor: 'green', color: 'blue' },
+      value: person.id
     });
-
-    new termkit.Text({
-      parent: parent,
-      content: person.influenceString(),
-      contentHasMarkup: true,
-      leftPadding: '|',
-      rightPadding: '| ',
-      y: y,
-      x: x + parent.outputWidth - 3 - db.players.length,
-      width: 3 + db.players.length,
-      attr: { bgColor: "black" }
-    });    
   },
 
   drawShip: async (spaceyard, parent, x, y, prefix) => {
     const player = getPlayer(spaceyard.playerId);
+    const w = parent.outputWidth;
+    const name = `${(prefix ? " " + prefix : "")} ${spaceyard.spaceshipName}`;
 
-    new termkit.Text({
+    new termkit.Button({
       parent: parent,
-      content: (prefix ? prefix : "") + spaceyard.spaceshipName,
+      content: helpers.clippedText(name, w - 5) + spaceyard.spaceshipIntegrity.toString().padEnd(3, " ") + "%",
       contentHasMarkup: true,
-      contentEllipsis: '…',
-      leftPadding: ' ',
       x: x,
       y: y,
-      width: parent.outputWidth - 6,
-      attr: { bgColor: "black", color: player ? player.color : "white" }
+      autoWidth: true,
+      blurAttr: { bgColor: "black", color: player ? player.color : "white" },
+      focusAttr: { bgColor: 'green', color: 'blue' },
+      value: spaceyard.id
     });
-
-    new termkit.Text({
-      parent: parent,
-      content: spaceyard.spaceshipIntegrity.toString().padEnd(3, " ") + "%",
-      contentHasMarkup: true,
-      rightPadding: ' ',
-      y: y,
-      x: x + parent.outputWidth - 5,
-      width: 5,
-      attr: { bgColor: "black", color: player ? player.color : "white" }
-    });    
   },
 
   drawOffice: async (office, parent, x, y) => {
