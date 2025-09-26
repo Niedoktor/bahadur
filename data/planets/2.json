@@ -1,9 +1,9 @@
 {
-    "name": "Laceybury",
+    "name": "Gabeville",
     "systemId": 1,
     "order": 3,
     "status": "open",
-    "localPower": 1,
-    "tradeValue": 4,
+    "localPower": 2,
+    "tradeValue": 3,
     "id": 3
 }

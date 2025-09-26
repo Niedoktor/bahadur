@@ -1,7 +1,9 @@
 {
     "id": 1,
-    "money": 12,
-    "lastAction": "",
-    "influence": 10,
-    "color": "yellow"
+    "money": 7,
+    "lastAction": "spaceyard",
+    "influence": 8,
+    "color": "yellow",
+    "factories": 0,
+    "luxuries": 0
 }

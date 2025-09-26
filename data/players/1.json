@@ -1,6 +1,8 @@
 {
     "id": 2,
-    "money": 9,
-    "influence": 6,
-    "color": "cyan"
+    "money": 12,
+    "influence": 8,
+    "color": "cyan",
+    "factories": 0,
+    "luxuries": 0
 }

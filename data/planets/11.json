@@ -1,9 +1,9 @@
 {
-    "name": "Port Gunnartown",
+    "name": "Goodyear",
     "systemId": 3,
     "order": 3,
     "status": "open",
-    "localPower": 1,
-    "tradeValue": 6,
+    "localPower": 0,
+    "tradeValue": 5,
     "id": 12
 }

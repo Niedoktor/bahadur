@@ -1,9 +1,9 @@
 {
-    "name": "Vilmatown",
+    "name": "Swiftstad",
     "systemId": 2,
     "order": 1,
-    "status": "open",
-    "localPower": 2,
-    "tradeValue": 6,
+    "status": "close",
+    "localPower": 3,
+    "tradeValue": 2,
     "id": 5
 }

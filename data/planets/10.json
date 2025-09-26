@@ -1,9 +1,9 @@
 {
-    "name": "Keeleyshire",
+    "name": "Altadena",
     "systemId": 3,
     "order": 2,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 6,
+    "localPower": 1,
+    "tradeValue": 2,
     "id": 11
 }

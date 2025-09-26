@@ -1,9 +1,9 @@
 {
-    "name": "Trantowfurt",
+    "name": "Vandervorttown",
     "systemId": 3,
     "order": 4,
     "status": "close",
-    "localPower": 2,
-    "tradeValue": 6,
+    "localPower": 1,
+    "tradeValue": 5,
     "id": 13
 }

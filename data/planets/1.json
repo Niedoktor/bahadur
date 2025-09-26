@@ -1,9 +1,9 @@
 {
-    "name": "New Jayson",
+    "name": "Carmel",
     "systemId": 1,
     "order": 2,
-    "status": "open",
-    "localPower": 2,
+    "status": "close",
+    "localPower": 1,
     "tradeValue": 5,
     "id": 2
 }

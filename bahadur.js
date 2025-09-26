@@ -99,7 +99,9 @@ async function investMenuSubmit(value) {
 	}else{
 		player.lastAction = value;
 	}
-	player.update();
+	await player.update();
+
+	await game.nextPhase();
 	
 	refresh();
 }
@@ -110,12 +112,14 @@ async function investAction(value){
 		await game.hireShareholder(1, shareId, db.company.shares[shareId].price);
 		ui.document.elements.investMenu.closeSubmenu();
 	}else	if(value.startsWith("executive")){
-		await game.hireExecutive(1, parseInt(value.substring(9)));
+		await game.hireExecutive(1, parseInt(value.substring(9)), db.prices.executive);
 		ui.document.elements.investMenu.closeSubmenu();
 	}else{
 		switch(value){
 			case "spaceyard": await game.buySpaceyard(1, 0, db.prices.spaceyard); break;
 			case "officer": await game.hireOfficer(1, db.prices.officer); break;
+			case "factory": await game.buyFactory(1, db.prices.factory); break;
+			case "luxury": await game.buyLuxury(1, db.prices.luxury); break;
 		}
 	}
 }

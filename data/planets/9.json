@@ -1,9 +1,9 @@
 {
-    "name": "Wernerview",
+    "name": "Alexandrineshire",
     "systemId": 3,
     "order": 1,
-    "status": "open",
-    "localPower": 2,
+    "status": "close",
+    "localPower": 3,
     "tradeValue": 3,
     "id": 10
 }

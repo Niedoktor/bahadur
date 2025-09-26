@@ -116,7 +116,7 @@ const setup = {
 
     let main = {
       "turn": 1,
-      "phase": "invest"
+      "phase": game.phases[0]
     }
 
     obj = await db.createObject("main", main);
@@ -127,7 +127,9 @@ const setup = {
       "money": 0,
       "lastAction": "",
       "influence": 0,
-      "color": "yellow"
+      "color": "yellow",
+      "factories": 0,
+      "luxuries": 0
     }
 
     let tab = await db.createTable("players");
@@ -139,7 +141,9 @@ const setup = {
       "id": 2,
       "money": 0,
       "influence": 0,
-      "color": "cyan"
+      "color": "cyan",
+      "factories": 0,
+      "luxuries": 0
     }
 
     row = await tab.createRow(player2);

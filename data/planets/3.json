@@ -1,9 +1,9 @@
 {
-    "name": "Julianneland",
+    "name": "Collinsburgh",
     "systemId": 1,
     "order": 4,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 4,
+    "localPower": 1,
+    "tradeValue": 2,
     "id": 4
 }

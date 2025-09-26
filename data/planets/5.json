@@ -1,9 +1,9 @@
 {
-    "name": "Sashaville",
+    "name": "Lancaster",
     "systemId": 2,
     "order": 2,
-    "status": "close",
-    "localPower": 0,
+    "status": "open",
+    "localPower": 3,
     "tradeValue": 4,
     "id": 6
 }

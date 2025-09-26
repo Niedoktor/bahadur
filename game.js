@@ -4,6 +4,11 @@ const db = require('./db');
 const log = require('./log');
 
 const game = {
+  phases: [
+    "invest",
+    "chairman"
+  ],
+
   buySpaceyard: async (playerId, systemId, price) => {
     let player = db.players.get(playerId);
 
@@ -23,6 +28,28 @@ const game = {
     await obj.update();
 
     return obj;
+  },
+
+  buyFactory: async (playerId, price) => {
+    let player = db.players.get(playerId);
+
+    if(price){
+      if(player.money < price) return undefined;
+      player.money -= price;
+    }
+
+    player.factories++;
+  },
+
+  buyLuxury: async (playerId, price) => {
+    let player = db.players.get(playerId);
+
+    if(price){
+      if(player.money < price) return undefined;
+      player.money -= price;
+    }
+
+    player.luxuries++;
   },
 
   hireOfficer: async (playerId, influence) => {
@@ -100,6 +127,17 @@ const game = {
     await obj.update();
 
     return obj;
+  },
+
+  nextPhase: async () => {
+    const phaseIdx = game.phases.indexOf(db.main.phase);
+    if(phaseIdx < game.phases.length - 1){
+      db.main.phase = game.phases[phaseIdx + 1];
+    }else{
+      db.main.phase = game.phases[0];
+    }
+
+    await db.main.update();
   }
 }
 

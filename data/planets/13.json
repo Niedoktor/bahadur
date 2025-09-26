@@ -1,9 +1,9 @@
 {
-    "name": "Wiegandport",
+    "name": "Malindaburgh",
     "systemId": 3,
     "order": 5,
     "status": "open",
-    "localPower": 3,
-    "tradeValue": 4,
+    "localPower": 0,
+    "tradeValue": 5,
     "id": 14
 }

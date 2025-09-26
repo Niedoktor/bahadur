@@ -1,9 +1,9 @@
 {
-    "name": "Wilmington",
+    "name": "Lake Eugeneport",
     "systemId": 3,
     "order": 6,
-    "status": "close",
-    "localPower": 0,
-    "tradeValue": 2,
+    "status": "open",
+    "localPower": 1,
+    "tradeValue": 3,
     "id": 15
 }

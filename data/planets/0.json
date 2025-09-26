@@ -1,9 +1,9 @@
 {
-    "name": "Shyanneboro",
+    "name": "Fort Geovanniside",
     "systemId": 1,
     "order": 1,
-    "status": "open",
-    "localPower": 3,
+    "status": "close",
+    "localPower": 1,
     "tradeValue": 4,
     "id": 1
 }
