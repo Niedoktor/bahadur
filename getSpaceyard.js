@@ -1,10 +1,16 @@
 const db = require('./db');
 const log = require('./log');
 
-const getSpaceyard = (spaceshipName) => {
-  const obj = db.spaceyards.find(o => o.spaceshipName == spaceshipName);
-
-  return obj;
+const extendSpaceyard = (spaceyard) => {
+  return spaceyard;
 }
 
-exports = module.exports = getSpaceyard;
+const getSpaceyard = (id) => {
+  return extendSpaceyard(db.spaceyards.get(id));
+}
+
+const getSpaceyardByName = (spaceshipName) => {
+  return extendSpaceyard(db.spaceyards.find(o => o.spaceshipName == spaceshipName));
+}
+
+exports = module.exports = { getSpaceyard, getSpaceyardByName };

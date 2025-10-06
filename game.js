@@ -2,6 +2,8 @@ const { faker } = require('@faker-js/faker');
 const helpers = require('./helpers');
 const db = require('./db');
 const log = require('./log');
+const { getOfficeBySystemId, getOfficeByName } = require('./getOffice');
+const { getPlayer } = require('./getPlayer');
 
 const game = {
   phases: [
@@ -10,7 +12,7 @@ const game = {
   ],
 
   buySpaceyard: async (playerId, systemId, price) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(price){
       if(player.money < price) return undefined;
@@ -31,7 +33,7 @@ const game = {
   },
 
   buyFactory: async (playerId, price) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(price){
       if(player.money < price) return undefined;
@@ -42,7 +44,7 @@ const game = {
   },
 
   buyLuxury: async (playerId, price) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(price){
       if(player.money < price) return undefined;
@@ -53,11 +55,11 @@ const game = {
   },
 
   hireOfficer: async (playerId, influence) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(influence && player.influence < influence) return undefined;
 
-    const office = db.offices.find(o => o.name == "militaryAffairs");
+    const office = getOfficeByName("militaryAffairs");
     const p = await game.hirePerson(playerId, influence);
 
     office.ensigns.push(p.id);
@@ -65,7 +67,7 @@ const game = {
   },
 
   hireShareholder: async (playerId, shareIdx, influence) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(influence && player.influence < influence) return undefined;
 
@@ -76,11 +78,11 @@ const game = {
   },
 
   hireExecutive: async (playerId, systemId, influence) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     if(influence && player.influence < influence) return undefined;
 
-    const office = db.offices.find(o => o.systemId == systemId);
+    const office = getOfficeBySystemId(systemId);
     const p = await game.hirePerson(playerId, influence);
 
     const executive = {
@@ -110,7 +112,7 @@ const game = {
   },
 
   hirePerson: async (playerId, influence) => {
-    let player = db.players.get(playerId);
+    let player = getPlayer(playerId);
 
     let person = {
       "name": faker.person.fullName(),

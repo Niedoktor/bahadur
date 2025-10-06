@@ -1,10 +1,12 @@
 const db = require('./db');
 const log = require('./log');
 
-const getPlayer = (id) => {
-  const obj = db.players.get(id);
-
-  return obj;
+const extendPlayer = (player) => {
+  return player;
 }
 
-exports = module.exports = getPlayer;
+const getPlayer = (id) => {
+  return extendPlayer(db.players.get(id));
+}
+
+exports = module.exports = { getPlayer };

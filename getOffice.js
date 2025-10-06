@@ -1,10 +1,20 @@
 const db = require('./db');
 const log = require('./log');
 
-const getOffice = (name) => {
-  const obj = db.offices.find(o => o.name == name);
-
-  return obj;
+const extendOffice = (office) => {
+  return office;
 }
 
-exports = module.exports = getOffice;
+const getOffice = (id) => {
+  return extendOffice(db.offices.get(id));
+}
+
+const getOfficeByName = (name) => {
+  return extendOffice(db.offices.find(o => o.name == name));
+}
+
+const getOfficeBySystemId = (systemId) => {
+  return extendOffice(db.offices.find(o => o.systemId == systemId));
+}
+
+exports = module.exports = { getOffice, getOfficeByName, getOfficeBySystemId };

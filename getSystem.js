@@ -1,10 +1,12 @@
 const db = require('./db');
 const log = require('./log');
 
-const getSystem = (id) => {
-  const obj = db.systems.get(id);
-
-  return obj;
+const extendSystem = (system) => {
+  return system;
 }
 
-exports = module.exports = getSystem;
+const getSystem = (id) => {
+  return extendSystem(db.systems.get(id));
+}
+
+exports = module.exports = { getSystem };

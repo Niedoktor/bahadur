@@ -1,7 +1,7 @@
 {
     "id": 1,
-    "money": 7,
-    "lastAction": "spaceyard",
+    "money": 10,
+    "lastAction": "",
     "influence": 8,
     "color": "yellow",
     "factories": 0,

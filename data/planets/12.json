@@ -1,9 +1,9 @@
 {
-    "name": "Vandervorttown",
+    "name": "Winnifredboro",
     "systemId": 3,
     "order": 4,
-    "status": "close",
+    "status": "open",
     "localPower": 1,
-    "tradeValue": 5,
+    "tradeValue": 4,
     "id": 13
 }

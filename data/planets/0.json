@@ -1,9 +1,9 @@
 {
-    "name": "Fort Geovanniside",
+    "name": "New Ariellecester",
     "systemId": 1,
     "order": 1,
-    "status": "close",
+    "status": "open",
     "localPower": 1,
-    "tradeValue": 4,
+    "tradeValue": 2,
     "id": 1
 }

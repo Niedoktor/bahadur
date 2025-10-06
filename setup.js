@@ -3,6 +3,8 @@ const { faker } = require('@faker-js/faker');
 const db = require('./db');
 const log = require('./log');
 const game = require('./game');
+const { getOfficeByName }= require('./getOffice');
+const { getPlayer } = require('./getPlayer');
 
 const setup = {
   cards: [
@@ -314,7 +316,7 @@ const setup = {
       const card = setup.cards[c];
 
       if(card.office){
-        const office = db.offices.find(o => o.name == card.office);
+        const office = getOfficeByName(card.office);
         const person = await game.hirePerson(pId, db.prices.office);
         office.personId = person.id;
         await office.update();
@@ -339,7 +341,7 @@ const setup = {
       }
 
       if(card.money){
-        const player = db.players.get(pId);
+        let player = getPlayer(pId);
         player.money += card.money;
       }
 

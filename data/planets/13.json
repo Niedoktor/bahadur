@@ -1,9 +1,9 @@
 {
-    "name": "Malindaburgh",
+    "name": "Donnellyborough",
     "systemId": 3,
     "order": 5,
     "status": "open",
     "localPower": 0,
-    "tradeValue": 5,
+    "tradeValue": 2,
     "id": 14
 }

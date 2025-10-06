@@ -1,9 +1,9 @@
 {
-    "name": "Carmel",
+    "name": "Feilchester",
     "systemId": 1,
     "order": 2,
-    "status": "close",
-    "localPower": 1,
-    "tradeValue": 5,
+    "status": "open",
+    "localPower": 0,
+    "tradeValue": 3,
     "id": 2
 }

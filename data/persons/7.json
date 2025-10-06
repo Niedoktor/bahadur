@@ -1,9 +1,9 @@
 {
-    "name": "Bradford Hudson",
+    "name": "Mr. Clint Schoen",
     "influence": [
-        0,
-        1
+        2,
+        0
     ],
-    "influencedBy": 2,
+    "influencedBy": 1,
     "id": 8
 }

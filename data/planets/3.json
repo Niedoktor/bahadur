@@ -1,9 +1,9 @@
 {
-    "name": "Collinsburgh",
+    "name": "Oakland Park",
     "systemId": 1,
     "order": 4,
     "status": "open",
     "localPower": 1,
-    "tradeValue": 2,
+    "tradeValue": 6,
     "id": 4
 }

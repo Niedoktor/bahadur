@@ -2,11 +2,11 @@ const termkit = require('terminal-kit');
 const helpers = require('./helpers');
 const db = require('./db');
 const log = require('./log');
-const getPerson = require('./getPerson');
-const getOffice = require('./getOffice');
-const getPlayer = require('./getPlayer');
-const getSystem = require('./getSystem');
-const getSpaceyard = require('./getSpaceyard');
+const { getPerson } = require('./getPerson');
+const { getOfficeByName } = require('./getOffice');
+const { getPlayer } = require('./getPlayer');
+const { getSystem } = require('./getSystem');
+const { getSpaceyard } = require('./getSpaceyard');
 
 const ui = {
   init: (term) => {
@@ -127,11 +127,11 @@ const ui = {
     });
 
     if(ui.companyMode == "offices"){
-      ui.drawOffice(getOffice("chairman"), ui.document.elements.office1, 0, 0);
-      ui.drawOffice(getOffice("tradeDirector"), ui.document.elements.office1, 0, 2);
-      ui.drawOffice(getOffice("shippingManager"), ui.document.elements.office1, 0, 4);
-      ui.drawOffice(getOffice("militaryAffairs"), ui.document.elements.office2, 0, 0);
-      ui.drawOffice(getOffice("chancellor"), ui.document.elements.office1, 0, 6);
+      ui.drawOffice(getOfficeByName("chairman"), ui.document.elements.office1, 0, 0);
+      ui.drawOffice(getOfficeByName("tradeDirector"), ui.document.elements.office1, 0, 2);
+      ui.drawOffice(getOfficeByName("shippingManager"), ui.document.elements.office1, 0, 4);
+      ui.drawOffice(getOfficeByName("militaryAffairs"), ui.document.elements.office2, 0, 0);
+      ui.drawOffice(getOfficeByName("chancellor"), ui.document.elements.office1, 0, 6);
 
       ui.drawEnlisted(ui.document.elements.office2, 0, 2);
     }
@@ -343,7 +343,7 @@ const ui = {
     await db.systems.forEach((system) => {
       const element = ui.document.elements["systemColumn" + system.id];
       const w = element.outputWidth;
-      const office = getOffice("systemPresident" + system.id);
+      const office = getOfficeByName("systemPresident" + system.id);
 
       if(ui.systemMode == "office"){
         ui.drawOffice(office, element, 0, 7);
@@ -530,7 +530,7 @@ const ui = {
       attr: { bgColor: "gray", color: 'black', bold: true }
     });
 
-    const ma = getOffice("militaryAffairs");
+    const ma = getOfficeByName("militaryAffairs");
     ma.ensigns.forEach(id => {
       const person = getPerson(id);
       ui.drawPerson(person, parent, x, ++y);

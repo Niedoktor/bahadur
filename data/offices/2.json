@@ -1,7 +1,7 @@
 {
     "name": "tradeDirector",
     "label": "TRADE DIRECTOR",
-    "personId": 17,
+    "personId": 14,
     "hasTreasury": true,
     "money": 3,
     "hasExecutives": false,

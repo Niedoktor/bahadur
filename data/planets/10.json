@@ -1,9 +1,9 @@
 {
-    "name": "Altadena",
+    "name": "Hill",
     "systemId": 3,
     "order": 2,
     "status": "open",
-    "localPower": 1,
-    "tradeValue": 2,
+    "localPower": 0,
+    "tradeValue": 4,
     "id": 11
 }

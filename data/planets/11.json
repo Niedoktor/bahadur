@@ -1,9 +1,9 @@
 {
-    "name": "Goodyear",
+    "name": "O'Haracester",
     "systemId": 3,
     "order": 3,
-    "status": "open",
+    "status": "close",
     "localPower": 0,
-    "tradeValue": 5,
+    "tradeValue": 3,
     "id": 12
 }
