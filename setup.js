@@ -153,7 +153,7 @@ const setup = {
 
     let company = {
       "money": 5,
-      "reputation": 4,
+      "standing": 10,
       "debt": 0,
       "shares": [
         {

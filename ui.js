@@ -321,7 +321,7 @@ const ui = {
           markup: true
         },
         {
-          content: ` Rep: ^[black]${db.company.reputation} `,
+          content: ` Stand: ^[black]${db.company.standing} `,
           disabled: true,
           markup: true
         },
