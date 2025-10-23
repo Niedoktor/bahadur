@@ -1,9 +1,9 @@
 {
-    "name": "New Santosstead",
+    "name": "Port Lenora",
     "systemId": 1,
     "order": 3,
     "status": "open",
     "localPower": 2,
-    "tradeValue": 3,
+    "tradeValue": 6,
     "id": 3
 }

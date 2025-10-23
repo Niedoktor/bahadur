@@ -1,8 +1,8 @@
 {
     "id": 1,
-    "money": 10,
+    "money": 9,
     "lastAction": "",
-    "influence": 8,
+    "influence": 10,
     "color": "yellow",
     "factories": 0,
     "luxuries": 0

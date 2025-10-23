@@ -1,9 +1,9 @@
 {
-    "name": "O'Haracester",
+    "name": "Paradise",
     "systemId": 3,
     "order": 3,
-    "status": "close",
-    "localPower": 0,
-    "tradeValue": 3,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 2,
     "id": 12
 }

@@ -1,9 +1,9 @@
 {
-    "name": "Joel Konopelski",
+    "name": "Velma Muller",
     "influence": [
-        1,
-        0
+        0,
+        2
     ],
-    "influencedBy": 1,
+    "influencedBy": 2,
     "id": 6
 }

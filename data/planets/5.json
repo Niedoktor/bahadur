@@ -1,9 +1,9 @@
 {
-    "name": "Letitia",
+    "name": "Ratkeberg",
     "systemId": 2,
     "order": 2,
     "status": "open",
-    "localPower": 3,
-    "tradeValue": 5,
+    "localPower": 2,
+    "tradeValue": 6,
     "id": 6
 }

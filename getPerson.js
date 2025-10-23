@@ -1,6 +1,5 @@
 const db = require('./db');
 const log = require('./log');
-const { getPlayer } = require('./getPlayer');
 
 const extendPerson = (person) => {
   person.influenceString = () => {
@@ -14,6 +13,8 @@ const extendPerson = (person) => {
   }
 
   person.getMostInfluentialPlayer = () => {
+    const { getPlayer } = require('./getPlayer');
+    
     const infFq = person.influence.reduce(function (arr, curr) {
       return arr[curr] ? ++arr[curr] : arr[curr] = 1, arr
     }, {});

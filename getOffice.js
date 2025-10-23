@@ -1,7 +1,12 @@
 const db = require('./db');
 const log = require('./log');
+const { getPerson } = require('./getPerson');
 
 const extendOffice = (office) => {
+  office.getPerson = () => {
+    return getPerson(office.personId);
+  }
+  
   return office;
 }
 

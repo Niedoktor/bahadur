@@ -1,9 +1,9 @@
 {
-    "name": "Lake Todworth",
+    "name": "Huelburgh",
     "systemId": 3,
     "order": 1,
-    "status": "close",
-    "localPower": 1,
-    "tradeValue": 7,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 6,
     "id": 10
 }

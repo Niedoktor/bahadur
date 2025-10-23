@@ -1,9 +1,9 @@
 {
-    "name": "Jay Price",
+    "name": "Enrique Feil Jr.",
     "influence": [
-        1,
-        0
+        0,
+        2
     ],
-    "influencedBy": 1,
+    "influencedBy": 2,
     "id": 5
 }

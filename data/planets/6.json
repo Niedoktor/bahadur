@@ -1,8 +1,8 @@
 {
-    "name": "Londonport",
+    "name": "Yakima",
     "systemId": 2,
     "order": 3,
-    "status": "close",
+    "status": "open",
     "localPower": 3,
     "tradeValue": 3,
     "id": 7

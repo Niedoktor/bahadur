@@ -42,7 +42,7 @@ let term;
 
 		term.clear();
 		init();
-		term.hideCursor(true);		
+		term.hideCursor(true);
 	});
 })()
 

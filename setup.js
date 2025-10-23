@@ -3,8 +3,9 @@ const { faker } = require('@faker-js/faker');
 const db = require('./db');
 const log = require('./log');
 const game = require('./game');
-const { getOfficeByName }= require('./getOffice');
+const { getOfficeByName } = require('./getOffice');
 const { getPlayer } = require('./getPlayer');
+const automa = require('./automa');
 
 const setup = {
   cards: [
@@ -145,7 +146,8 @@ const setup = {
       "influence": 0,
       "color": "cyan",
       "factories": 0,
-      "luxuries": 0
+      "luxuries": 0,
+      "climate": 0
     }
 
     row = await tab.createRow(player2);
@@ -352,6 +354,8 @@ const setup = {
     };
 
     await db.players.update();
+
+    await automa.cards[1].setClimate(getPlayer(2));    
 
     log.append("--- RESET DONE!---");
   }

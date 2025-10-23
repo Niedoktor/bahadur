@@ -1,9 +1,9 @@
 {
-    "name": "Winnifredboro",
+    "name": "Gertrude",
     "systemId": 3,
     "order": 4,
     "status": "open",
-    "localPower": 1,
-    "tradeValue": 4,
+    "localPower": 0,
+    "tradeValue": 6,
     "id": 13
 }

@@ -1,9 +1,9 @@
 {
-    "name": "Bridget Littel",
+    "name": "Maxine Murphy",
     "influence": [
-        2,
-        0
+        0,
+        1
     ],
-    "influencedBy": 1,
+    "influencedBy": 2,
     "id": 9
 }

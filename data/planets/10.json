@@ -1,9 +1,9 @@
 {
-    "name": "Hill",
+    "name": "Bryonville",
     "systemId": 3,
     "order": 2,
-    "status": "open",
-    "localPower": 0,
-    "tradeValue": 4,
+    "status": "close",
+    "localPower": 3,
+    "tradeValue": 2,
     "id": 11
 }

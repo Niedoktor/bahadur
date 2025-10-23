@@ -1,9 +1,9 @@
 {
-    "name": "Miss Lucille Dicki",
+    "name": "Diane Orn",
     "influence": [
-        1,
-        0
+        0,
+        2
     ],
-    "influencedBy": 1,
+    "influencedBy": 2,
     "id": 2
 }
