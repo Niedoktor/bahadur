@@ -1,9 +1,9 @@
 {
-    "name": "Dannyborough",
+    "name": "Leonardohaven",
     "systemId": 1,
     "order": 2,
     "status": "open",
-    "localPower": 0,
-    "tradeValue": 2,
+    "localPower": 2,
+    "tradeValue": 5,
     "id": 2
 }

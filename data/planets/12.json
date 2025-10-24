@@ -1,9 +1,9 @@
 {
-    "name": "Gertrude",
+    "name": "Stromanfurt",
     "systemId": 3,
     "order": 4,
-    "status": "open",
-    "localPower": 0,
-    "tradeValue": 6,
+    "status": "close",
+    "localPower": 3,
+    "tradeValue": 4,
     "id": 13
 }

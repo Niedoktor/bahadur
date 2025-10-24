@@ -1,9 +1,9 @@
 {
-    "name": "Huelburgh",
+    "name": "Port Chad",
     "systemId": 3,
     "order": 1,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 6,
+    "localPower": 1,
+    "tradeValue": 5,
     "id": 10
 }

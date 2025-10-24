@@ -1,9 +1,9 @@
 {
-    "name": "Yakima",
+    "name": "Ivastad",
     "systemId": 2,
     "order": 3,
-    "status": "open",
-    "localPower": 3,
-    "tradeValue": 3,
+    "status": "close",
+    "localPower": 0,
+    "tradeValue": 6,
     "id": 7
 }

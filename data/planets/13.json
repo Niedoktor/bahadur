@@ -1,9 +1,9 @@
 {
-    "name": "New Nannie",
+    "name": "Janis",
     "systemId": 3,
     "order": 5,
     "status": "open",
-    "localPower": 0,
-    "tradeValue": 3,
+    "localPower": 1,
+    "tradeValue": 5,
     "id": 14
 }

@@ -355,7 +355,7 @@ const setup = {
 
     await db.players.update();
 
-    await automa.cards[1].setClimate(getPlayer(2));    
+    await automa.cards[4].setClimate(getPlayer(2));    
 
     log.append("--- RESET DONE!---");
   }

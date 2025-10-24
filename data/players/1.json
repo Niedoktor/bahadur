@@ -1,9 +1,9 @@
 {
     "id": 2,
-    "money": 12,
+    "money": 9,
     "influence": 6,
     "color": "cyan",
     "factories": 0,
     "luxuries": 0,
-    "climate": 0
+    "climate": 2
 }

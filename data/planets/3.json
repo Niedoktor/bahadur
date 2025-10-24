@@ -1,9 +1,9 @@
 {
-    "name": "Julienworth",
+    "name": "Downers Grove",
     "systemId": 1,
     "order": 4,
     "status": "close",
-    "localPower": 3,
+    "localPower": 0,
     "tradeValue": 3,
     "id": 4
 }

@@ -1,9 +1,9 @@
 {
-    "name": "Natasha Abbott",
+    "name": "Alison Ondricka",
     "influence": [
-        0,
-        2
+        2,
+        0
     ],
-    "influencedBy": 2,
+    "influencedBy": 1,
     "id": 3
 }

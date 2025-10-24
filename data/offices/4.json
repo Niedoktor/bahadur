@@ -1,7 +1,7 @@
 {
     "name": "militaryAffairs",
     "label": "MILITARY AFFAIRS",
-    "personId": 1,
+    "personId": 14,
     "hasTreasury": false,
     "hasExecutives": false,
     "ensigns": [],

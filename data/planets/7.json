@@ -1,9 +1,9 @@
 {
-    "name": "Greta",
+    "name": "New Kailynville",
     "systemId": 2,
     "order": 4,
-    "status": "close",
-    "localPower": 1,
-    "tradeValue": 6,
+    "status": "open",
+    "localPower": 2,
+    "tradeValue": 3,
     "id": 8
 }

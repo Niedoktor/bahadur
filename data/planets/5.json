@@ -1,9 +1,9 @@
 {
-    "name": "Ratkeberg",
+    "name": "Greenfeldercester",
     "systemId": 2,
     "order": 2,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 6,
+    "localPower": 0,
+    "tradeValue": 4,
     "id": 6
 }

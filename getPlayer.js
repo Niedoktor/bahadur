@@ -14,6 +14,19 @@ const extendPlayer = (player) => {
     });
     return res;
   }
+
+  player.getSpaceyards = (systemId) => {
+    const { getSpaceyard } = require('./getSpaceyard');
+
+    const res = [];
+    db.spaceyards.forEach(o => {
+      if(o.playerId == player.id && (!systemId || o.systemId == systemId)){
+        res.push(getSpaceyard(o.id));
+      }
+    });
+    return res;
+  }
+
   return player;
 }
 

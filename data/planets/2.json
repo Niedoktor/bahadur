@@ -1,9 +1,9 @@
 {
-    "name": "Port Lenora",
+    "name": "Ortizburgh",
     "systemId": 1,
     "order": 3,
     "status": "open",
-    "localPower": 2,
-    "tradeValue": 6,
+    "localPower": 3,
+    "tradeValue": 2,
     "id": 3
 }

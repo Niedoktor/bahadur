@@ -1,9 +1,9 @@
 {
-    "name": "Paradise",
+    "name": "Lake Lavada",
     "systemId": 3,
     "order": 3,
     "status": "open",
     "localPower": 2,
-    "tradeValue": 2,
+    "tradeValue": 6,
     "id": 12
 }

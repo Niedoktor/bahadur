@@ -1,9 +1,9 @@
 {
-    "name": "Matildaburgh",
+    "name": "New Rebekah",
     "systemId": 1,
     "order": 1,
     "status": "open",
     "localPower": 1,
-    "tradeValue": 3,
+    "tradeValue": 5,
     "id": 1
 }
